@@ -13,6 +13,7 @@ export interface TiledMapData {
 
 export interface TiledTilesetData {
     columns: number;
+    firstgid: number;
     source: string;
     image: string;
     imagewidth: number;
@@ -23,6 +24,12 @@ export interface TiledTilesetData {
     name: string;
     margin: number; // todo: 
     spacing: number; // todo
+    tiles?: TileData[];
+}
+
+export interface TileData {
+    id: number,
+    properties?: TiledProperty[];
 }
 
 export interface TiledLayerData {

@@ -9,13 +9,13 @@ import * as PIXI from 'pixi.js';
 interface Props {
     basePath: string;
     data: TiledMapData;
-    setBlockedTiles: (tiles: number[][]) => void;
+    setRackPositions: (tiles: [number, number][]) => void;
 }
 
 const DEBUG = false;
 
 const Tilemap = (props: Props) => {
-    const {basePath, data, setBlockedTiles} = props;
+    const {basePath, data, setRackPositions} = props;
     const [layers, setLayers] = useState<JSX.Element[]>();
     const [debug, setDebug] = useState<JSX.Element[]>();
 
@@ -26,24 +26,30 @@ const Tilemap = (props: Props) => {
         const texture = PIXI.Texture.from(`${basePath}/${tileset.image}`);
         const baseTexture = PIXI.BaseTexture.from(`${basePath}/${tileset.image}`);
         const spritesheet = new PIXI.Spritesheet(baseTexture, spritesheetData);
-        const blockedTiles: number[][] = [];
 
         spritesheet.parse(() => {
+            const rackTileIds = tileset.tiles?.filter(tile => tile.properties?.some(p => p.name === 'rack')).map(t => t.id);
+            const rackPositions: [number, number][] = [];
             const layers = data.layers.filter(layer => layer.visible).map(layer => {
-                if (layer.properties && layer.properties.some(p => p.name === 'blocksMovement' && p.value === true)){
-                    addToBlockedTiles(blockedTiles, layer, layer.width);
-                }
+                layer.data.forEach((id, index) => {
+                    if(rackTileIds && rackTileIds.some(rtId => rtId === id - tileset.firstgid)){
+                        const x = (index % layer.width);
+                        const y = Math.floor(index / layer.width);
+                        rackPositions.push([x, y]);    
+                    }
+                })
+                 
                 return createTileLayer(layer, texture, data.width, tileset, spritesheet);
             });
-            setBlockedTiles(blockedTiles);
+            setRackPositions(rackPositions);
             setLayers(layers);
             
             if (DEBUG){
-                setDebug(getDebug(data.layers[0].data.length, data.layers[0].width, tileset.tilewidth, tileset.tileheight, blockedTiles))
+                setDebug(getDebug(data.layers[0].data.length, data.layers[0].width, tileset.tilewidth, tileset.tileheight, rackPositions))
             }
         });
 
-    }, [basePath, data, setBlockedTiles]);
+    }, [basePath, data, setRackPositions]);
     return (
         <Container >
             {layers}
@@ -142,16 +148,4 @@ const parseSpritesheetData = (mapData: TiledMapData): SpritesheetData => {
             scale: 1
         }
     };
-}
-
-/** All tiles in this layer are blocking movement */
-const addToBlockedTiles = (blockedTiles: number[][], layer: TiledLayerData, columns: number) => {
-    layer.data.reduce((acc: number[][], tile, index) => {
-        if (tile > 0) {
-            const x = (index % columns);
-            const y = Math.floor(index / columns);
-            acc.push([x, y]);    
-        }
-        return acc;
-    }, blockedTiles);
 }
