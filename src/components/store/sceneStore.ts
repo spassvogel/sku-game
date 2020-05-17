@@ -28,6 +28,7 @@ type Action =
   export const initialState: WarehouseStore = {
       boxes: {
           hairdryer: { location: [4, 8], product: 'hairdryer' },
+          toothbrush: { location: [5, 8], product: 'toothbrush' },
           microwave: { location: [3, 6], product: 'microwave' }
       }
 }

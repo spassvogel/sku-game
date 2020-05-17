@@ -51,11 +51,13 @@ const Box = (props: Props & React.ComponentProps<typeof Container>) => {
 
     const onDragStart = (event: PIXI.interaction.InteractionEvent) => {
         data.current = event.data;
+        event.currentTarget.zIndex = 2;
         event.stopPropagation(); 
         offset.current = data.current.getLocalPosition(ref.current!);
     }
     
     const onDragEnd = (event: PIXI.interaction.InteractionEvent) => {
+        event.currentTarget.zIndex = 1;
         if (props.onReleased) props.onReleased(event);
         data.current = undefined;
     }

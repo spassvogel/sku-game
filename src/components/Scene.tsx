@@ -101,6 +101,7 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
                 ref={ref}
                 interactive={true}
                 hitArea={new PIXI.RoundedRectangle(0, 0, width, height, 0)}
+                sortableChildren
                 {...restProps}
             >
                 { mapData && (
