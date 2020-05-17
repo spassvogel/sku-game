@@ -43,7 +43,9 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
 
     const basePath = jsonPath.substr(0, jsonPath.lastIndexOf('/'));
 
-    /** Returns the location of the rack at given location */
+    /** Returns the location of the rack at given location 
+     *  The tile south of a rack counts too. When no rack is found
+     * returns undefined */
     const getRackAtLocation = useCallback((location: [number, number]) => {
         // Racks are two tiles high but the box is placed at the top tile
         return rackPositions.find((l) => (l[0] === location[0] && (l[1] === location[1] || l[1] === location[1] - 1)))
@@ -57,15 +59,26 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
         return [Math.floor(point.x / mapData?.tilewidth), Math.floor(point.y / mapData?.tileheight)];
     }, [mapData]);
     
-    const handleDragged = (event: PIXI.interaction.InteractionEvent) => {
+    const getBoxNameAtRackLocation = (location: [number, number]) => {
+        const entry = Object.entries(state.boxes)
+            .find(([name, box]) => box.location[0] === location[0] && box.location[1] === location[1]);
+        if (entry) return entry[0];
+    }
+
+    const handleDragged = (boxName: string, event: PIXI.interaction.InteractionEvent) => {
         const position = event.data.global;
         const location = pointToSceneLocation(position); // tile location
 
-        const rack = getRackAtLocation(location);
+        const rackLocation = getRackAtLocation(location);
 
         let tint = 0xFFFFFF;
-        if (rack) {
-            tint = 0xFF3300;
+        if (rackLocation) {
+            const otherBoxName = getBoxNameAtRackLocation(rackLocation);
+            if (!otherBoxName || otherBoxName === boxName) {
+                tint = 0x00FF30; // Can drop here
+            } else {
+                tint = 0xFF3300; // Can't drop on another box
+            }
         }
         setTint(event.currentTarget, tint);
     }
@@ -107,14 +120,14 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
                 { mapData && (
                     <>
                         <Tilemap basePath={basePath} data={mapData} setRackPositions={setRackPositions}/>
-                        { Object.entries(state.boxes).map(([key, box]) => (
+                        { Object.entries(state.boxes).map(([name, box]) => (
                             <Box 
                                 location={box.location} 
                                 tileWidth={mapData.tilewidth} 
                                 tileHeight={mapData.tileheight}
-                                onDragged={handleDragged}
-                                onReleased={(event) => handleBoxDragEnd(key, event) }
-                                key={key} 
+                                onDragged={(event) => handleDragged(name, event) }
+                                onReleased={(event) => handleBoxDragEnd(name, event) }
+                                key={name} 
                             />
                         ))}
                     </>

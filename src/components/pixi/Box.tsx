@@ -67,14 +67,12 @@ const Box = (props: Props & React.ComponentProps<typeof Container>) => {
             const parentPos = data.current.getLocalPosition(ref.current!.parent);
             const position = new PIXI.Point(parentPos.x - offset.current!.x, parentPos.y - offset.current!.y);
             ref.current!.position = position;
-            //setPosition(position);
             if (props.onDragged)
                 props.onDragged(event);
         }
     }
 
     const img = `${process.env.PUBLIC_URL}/images/box1${props.back ? 'b'  : ''}.png`;
-    //const tint = getTint(placement);
 
     return (
         <Container

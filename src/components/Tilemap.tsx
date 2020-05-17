@@ -67,10 +67,10 @@ const getDebug = (tileCount: number, columns: number, tileWidth: number, tileHei
         const x = location[0] * tileWidth;
         const y = location[1] * tileHeight;
         var style = {
-            font : 'bold italic 36px Arial',
+            font : 'bold italic 12px Arial',
             fill : '#F7EDCA',
             stroke : '#4a1850',
-            strokeThickness : 5,
+            strokeThickness : 2,
             wordWrap : true,
             wordWrapWidth : 440
         };
