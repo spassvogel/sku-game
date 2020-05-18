@@ -34,8 +34,8 @@ export const initialState: WarehouseStore = {
         microphone: { location: [3, 0], product: 'microphone' },
         playstation: { location: [3, 1], product: 'playstation' },
 
-        headphones: { location: [4, 0], product: 'headphones' },
-        socks: { location: [4, 1], product: 'socks' },
+        "IRN 590": { location: [4, 0], product: 'headphones' },
+        "CAM 679": { location: [4, 1], product: 'socks' },
 
         chair: { location: [5, 0], product: 'chair' },
         tabl: { location: [5, 1], product: 'socks' },

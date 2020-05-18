@@ -4,6 +4,7 @@ import Scene from 'components/Scene';
 import * as PIXI  from 'pixi.js';
 import { Stage } from '@inlet/react-pixi';
 import Box from 'components/pixi/Box';
+import IPad from 'components/ui/IPad';
 window.PIXI = PIXI;
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
       <Stage width={width} height={height}>
         <Scene tilemap="scenes/level1.json" width={width} height={height}/>
       </Stage>
+      <IPad />
     </div>
   );
 }
