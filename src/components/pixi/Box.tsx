@@ -1,4 +1,4 @@
-import React, { useRef,  useMemo } from 'react';
+import React, { useRef,  useMemo, useState } from 'react';
 import { Sprite, Graphics, Container } from '@inlet/react-pixi';
 import * as PIXI from 'pixi.js';
 import { PixiPlugin } from 'gsap/all';
@@ -12,7 +12,7 @@ interface Props {
     location?: [number, number];
     tileWidth: number;
     tileHeight: number;
-    back?: boolean;
+    behindWall?: boolean;
     onDragged?: (event: PIXI.interaction.InteractionEvent) => void;
     onReleased?: (event: PIXI.interaction.InteractionEvent) => void;
     delay?: number; // Wait this long before showing
@@ -26,9 +26,11 @@ const Box = (props: Props & React.ComponentProps<typeof Container>) => {
         tileHeight = 0,
     } = props;
     const ref = useRef<PIXI.Container>(null);
+    const imgRef = useRef<PIXI.Sprite>(null);
+    const dragRef = useRef<PIXI.Sprite>(null);
     const offset = useRef<PIXI.Point>();
     const data = useRef<PIXI.interaction.InteractionData>();
-    //const [position, setPosition] = useState<PIXI.Point>(props.position || new PIXI.Point());
+    //const [behindWall, setBehindWall] = useState<boolean>(props.behindWall === true);
 
     const {x, y} = useMemo(() => {
         return { 
@@ -54,25 +56,33 @@ const Box = (props: Props & React.ComponentProps<typeof Container>) => {
         event.currentTarget.zIndex = 2;
         event.stopPropagation(); 
         offset.current = data.current.getLocalPosition(ref.current!);
+
+        imgRef.current!.visible = false;
+        dragRef.current!.visible = true;
     }
     
     const onDragEnd = (event: PIXI.interaction.InteractionEvent) => {
         event.currentTarget.zIndex = 1;
-        if (props.onReleased) props.onReleased(event);
         data.current = undefined;
+
+        if (props.onReleased) props.onReleased(event);
+        imgRef.current!.visible = true;
+        dragRef.current!.visible = false;
+
     }
     
     const onDragMove = (event: PIXI.interaction.InteractionEvent) => {
         if (data.current && ref.current){
             const parentPos = data.current.getLocalPosition(ref.current!.parent);
             const position = new PIXI.Point(parentPos.x - offset.current!.x, parentPos.y - offset.current!.y);
+
             ref.current!.position = position;
             if (props.onDragged)
                 props.onDragged(event);
         }
     }
 
-    const img = `${process.env.PUBLIC_URL}/images/box1${props.back ? 'b'  : ''}.png`;
+    const img = `${process.env.PUBLIC_URL}/images/box1${ props.behindWall ? 'b' : ''}.png`;
 
     return (
         <Container
@@ -88,21 +98,29 @@ const Box = (props: Props & React.ComponentProps<typeof Container>) => {
             mousemove={onDragMove}
             touchmove={onDragMove}
         >
-            <Graphics draw={(graphics:PIXI.Graphics) => {
-                const line = 3;
+            {/* <Graphics draw={(graphics:PIXI.Graphics) => {
+                const line = 2;
 //                 const blocked = blockedTiles.some((loc) => loc[0] === location[0] && loc[1] === location[1]);
                 // const color = blocked ? 0xFF3300 : 0x00FF00;
                 const color = 0xFF3300;
                 graphics.lineStyle(line, color);
                 graphics.drawRect(line / 2, line / 2, tileWidth - line / 2, tileHeight - line / 2);
                 graphics.endFill();
-            }}>
+            }} /> */}
             <Sprite 
                 anchor={[0, -0.5]}
                 image={img}
-                // tint={tint}
+                ref={imgRef}
             />              
-            </Graphics>
+            <Sprite 
+                name="ghost"
+                anchor={[0, -0.5]}
+                alpha={0.9}
+                image={`${process.env.PUBLIC_URL}/images/box1.png`}
+                ref={dragRef}
+                visible={false}
+            />              
+            {/* </Graphics> */}
         </Container>
     );
 }

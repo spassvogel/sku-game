@@ -2,12 +2,12 @@ import { WarehouseStore } from "constants/warehouseStore";
 
 export const reducer = (state: WarehouseStore, action: Action) => {
     switch (action.type) {
-        case 'placeBoxInRack':
+        case 'placeBox':
             const boxes = { 
                 ...state.boxes,
                 [action.boxName]: {
                     ...state.boxes[action.boxName],
-                    location: action.rack
+                    location: action.location
                 }
             }
             return { 
@@ -23,12 +23,24 @@ export const reducer = (state: WarehouseStore, action: Action) => {
 type Action =
   | { type: 'increment' }
   | { type: 'decrement' }
-  | { type: 'placeBoxInRack'; boxName: string, rack: [number, number] };
+  | { type: 'placeBox'; boxName: string, location: [number, number] };
 
-  export const initialState: WarehouseStore = {
-      boxes: {
-          hairdryer: { location: [4, 8], product: 'hairdryer' },
-          toothbrush: { location: [5, 8], product: 'toothbrush' },
-          microwave: { location: [3, 6], product: 'microwave' }
-      }
+export const initialState: WarehouseStore = {
+    boxes: {
+        hairdryer: { location: [4, 8], product: 'hairdryer' },
+        toothbrush: { location: [5, 8], product: 'toothbrush' },
+        microwave: { location: [3, 6], product: 'microwave' },
+
+        microphone: { location: [3, 0], product: 'microphone' },
+        playstation: { location: [3, 1], product: 'playstation' },
+
+        headphones: { location: [4, 0], product: 'headphones' },
+        socks: { location: [4, 1], product: 'socks' },
+
+        chair: { location: [5, 0], product: 'chair' },
+        tabl: { location: [5, 1], product: 'socks' },
+
+        plates: { location: [6, 0], product: 'plates' },
+        knife: { location: [6, 1], product: 'knife' }
+    }
 }

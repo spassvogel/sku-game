@@ -29,7 +29,10 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
     // const [store, setStore] = useState<WarehouseStore>()
     const [state, dispatch] = useReducer(reducer, initialState);
     const [mapData, setMapData] = useState<TiledMapData>();
-    const [rackPositions, setRackPositions] = useState<[number, number][]>([]);
+    const [rackLocations, setRackLocations] = useState<[number, number][]>([]);
+    const [dockLocations, setDockLocations] = useState<[number, number][]>([]);
+    const [wallLocations, setWallLocations] = useState<[number, number][]>([]);    
+
     const ref = useRef<PIXI.Container>(null);
 
     const jsonPath = `${process.env.PUBLIC_URL}/${tilemap}`;
@@ -48,8 +51,12 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
      * returns undefined */
     const getRackAtLocation = useCallback((location: [number, number]) => {
         // Racks are two tiles high but the box is placed at the top tile
-        return rackPositions.find((l) => (l[0] === location[0] && (l[1] === location[1] || l[1] === location[1] - 1)))
-    }, [rackPositions]);
+        return rackLocations.find((l) => (l[0] === location[0] && (l[1] === location[1] || l[1] === location[1] - 1)))
+    }, [rackLocations]);
+
+    const getDockAtLocation = useCallback((location: [number, number]) => {
+        return dockLocations.find((l) => (l[0] === location[0] && l[1] === location[1]))
+    }, [dockLocations]);
 
      // Converts pixel coordinate to scene location
      const pointToSceneLocation = useCallback((point: PIXI.Point): [number, number] => {
@@ -59,7 +66,7 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
         return [Math.floor(point.x / mapData?.tilewidth), Math.floor(point.y / mapData?.tileheight)];
     }, [mapData]);
     
-    const getBoxNameAtRackLocation = (location: [number, number]) => {
+    const getBoxNameAtLocation = (location: [number, number]) => {
         const entry = Object.entries(state.boxes)
             .find(([name, box]) => box.location[0] === location[0] && box.location[1] === location[1]);
         if (entry) return entry[0];
@@ -69,11 +76,11 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
         const position = event.data.global;
         const location = pointToSceneLocation(position); // tile location
 
-        const rackLocation = getRackAtLocation(location);
+        const rackLocation = getRackAtLocation(location) || getDockAtLocation(location);
 
         let tint = 0xFFFFFF;
         if (rackLocation) {
-            const otherBoxName = getBoxNameAtRackLocation(rackLocation);
+            const otherBoxName = getBoxNameAtLocation(rackLocation);
             if (!otherBoxName || otherBoxName === boxName) {
                 tint = 0x00FF30; // Can drop here
             } else {
@@ -87,25 +94,46 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
         const position = event.data.global;
         const location = pointToSceneLocation(position); // tile location
 
-        const rack = getRackAtLocation(location);
+        setTint(event.currentTarget, 0xFFFFFF);
 
-        if (rack) {
-            setTint(event.currentTarget, 0xFFFFFF);
-            dispatch({ type: 'placeBoxInRack', boxName, rack});
-        } else {
-            const box = state.boxes[boxName];
-            const originX = box.location[0] * mapData!.tilewidth;
-            const originY = box.location[1] * mapData!.tileheight;
-
-            gsap.to(event.currentTarget, { 
-                duration: .5,
-                ease: "bounce.out",
-                pixi: {
-                    x: originX,
-                    y: originY
-                }
-            });
+        const rackOrDockLocation = getRackAtLocation(location) || getDockAtLocation(location);
+        if (rackOrDockLocation) {
+            const otherBoxName = getBoxNameAtLocation(rackOrDockLocation);
+            if (!otherBoxName || otherBoxName === boxName) {
+                dispatch({ type: 'placeBox', boxName, location: rackOrDockLocation!});
+                return;
+            }
         }
+
+        // Couldn't place, fly back to origin
+        const box = state.boxes[boxName];
+        const originX = box.location[0] * mapData!.tilewidth;
+        const originY = box.location[1] * mapData!.tileheight;
+
+        gsap.to(event.currentTarget, { 
+            duration: .5,
+            ease: "bounce.out",
+            pixi: {
+                x: originX,
+                y: originY
+            }
+        });
+    }
+
+    const renderBoxes = () => {
+        if (!mapData || !wallLocations.length) return null;
+        
+        return Object.entries(state.boxes).map(([name, box]) => (
+            <Box 
+                location={box.location} 
+                tileWidth={mapData.tilewidth} 
+                tileHeight={mapData.tileheight}
+                onDragged={(event) => handleDragged(name, event) }
+                onReleased={(event) => handleBoxDragEnd(name, event) }
+                key={name}
+                behindWall={isBehindWall(box.location, wallLocations)}
+            />
+        ));
     }
 
     return (
@@ -119,17 +147,14 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
             >
                 { mapData && (
                     <>
-                        <Tilemap basePath={basePath} data={mapData} setRackPositions={setRackPositions}/>
-                        { Object.entries(state.boxes).map(([name, box]) => (
-                            <Box 
-                                location={box.location} 
-                                tileWidth={mapData.tilewidth} 
-                                tileHeight={mapData.tileheight}
-                                onDragged={(event) => handleDragged(name, event) }
-                                onReleased={(event) => handleBoxDragEnd(name, event) }
-                                key={name} 
-                            />
-                        ))}
+                        <Tilemap 
+                            basePath={basePath} 
+                            data={mapData} 
+                            setRackLocations={setRackLocations}
+                            setDockLocations={setDockLocations}
+                            setWallLocations={setWallLocations}
+                        />
+                        { renderBoxes() }
                     </>
                 )}
 
@@ -150,23 +175,16 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
 
 export default Scene;
 
-export enum PlacementStatus {
-    none, /* not over any rack */
-    blocked, /* over a rack thats currently taken */
-    free /* over a free rack */
-}
 
-const getTint = (placement: PlacementStatus) => {
-    switch (placement) {
-        case PlacementStatus.none:
-            return 0xFFFFFF;
-        case PlacementStatus.blocked:
-            return 0xFF3300;
-        case PlacementStatus.free:
-            return 0x00FF00;        
+const setTint = (obj: PIXI.DisplayObject, tint: number) => {
+    const ghost = (obj as PIXI.Container).children.find(c => c.name === 'ghost');
+    if (ghost) {
+        (ghost as PIXI.Sprite).tint = tint; 
     }
 }
 
-const setTint = (obj: PIXI.DisplayObject, tint: number) => {
-    (((obj as PIXI.Container).children[0]! as PIXI.Graphics).children[0] as PIXI.Sprite).tint = tint; 
+// Returns true if the tile south of this one is a wall
+const isBehindWall = (location: [number, number], wallLocations: [number, number][]) => {
+    const behind = wallLocations.some(wL => wL[0] === location[0] && wL[1] === location[1] + 1);
+    return behind;
 }

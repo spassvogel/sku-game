@@ -9,13 +9,15 @@ import * as PIXI from 'pixi.js';
 interface Props {
     basePath: string;
     data: TiledMapData;
-    setRackPositions: (tiles: [number, number][]) => void;
+    setRackLocations: (tiles: [number, number][]) => void;
+    setDockLocations: (tiles: [number, number][]) => void;
+    setWallLocations: (tiles: [number, number][]) => void;
 }
 
 const DEBUG = false;
 
 const Tilemap = (props: Props) => {
-    const {basePath, data, setRackPositions} = props;
+    const {basePath, data, setRackLocations, setDockLocations, setWallLocations} = props;
     const [layers, setLayers] = useState<JSX.Element[]>();
     const [debug, setDebug] = useState<JSX.Element[]>();
 
@@ -26,30 +28,47 @@ const Tilemap = (props: Props) => {
         const texture = PIXI.Texture.from(`${basePath}/${tileset.image}`);
         const baseTexture = PIXI.BaseTexture.from(`${basePath}/${tileset.image}`);
         const spritesheet = new PIXI.Spritesheet(baseTexture, spritesheetData);
+        const wallLocations: [number, number][] = [];
 
         spritesheet.parse(() => {
-            const rackTileIds = tileset.tiles?.filter(tile => tile.properties?.some(p => p.name === 'rack')).map(t => t.id);
-            const rackPositions: [number, number][] = [];
+            // Rack tiles are marked on the tileset with property 'rack'
+            const rackTileIds = tileset.tiles?.filter(tile => tile.properties?.some(p => p.name === 'rack' && p.value)).map(t => t.id);
+            const dockTileIds = tileset.tiles?.filter(tile => tile.properties?.some(p => p.name === 'dock' && p.value)).map(t => t.id);
+            const rackLocations: [number, number][] = [];
+            const dockLocations: [number, number][] = [];
             const layers = data.layers.filter(layer => layer.visible).map(layer => {
                 layer.data.forEach((id, index) => {
                     if(rackTileIds && rackTileIds.some(rtId => rtId === id - tileset.firstgid)){
                         const x = (index % layer.width);
                         const y = Math.floor(index / layer.width);
-                        rackPositions.push([x, y]);    
+                        rackLocations.push([x, y]);    
+                    }
+
+                    if(dockTileIds && dockTileIds.some(rtId => rtId === id - tileset.firstgid)){
+                        const x = (index % layer.width);
+                        const y = Math.floor(index / layer.width);
+                        dockLocations.push([x, y]);    
                     }
                 })
-                 
+ 
+                // walls are marked on the layer with property 'wall'
+                if (layer.properties && layer.properties.some(p => p.name === 'wall' && p.value === true)){
+                    addAllTilesInLayerToList(wallLocations, layer, layer.width);
+                }
+                
                 return createTileLayer(layer, texture, data.width, tileset, spritesheet);
             });
-            setRackPositions(rackPositions);
+            setRackLocations(rackLocations);
+            setDockLocations(dockLocations);
+            setWallLocations(wallLocations);
             setLayers(layers);
             
             if (DEBUG){
-                setDebug(getDebug(data.layers[0].data.length, data.layers[0].width, tileset.tilewidth, tileset.tileheight, rackPositions))
+                setDebug(getDebug(data.layers[0].data.length, data.layers[0].width, tileset.tilewidth, tileset.tileheight, rackLocations))
             }
         });
 
-    }, [basePath, data, setRackPositions]);
+    }, [basePath, data, setRackLocations, setDockLocations, setWallLocations]);
     return (
         <Container >
             {layers}
@@ -148,4 +167,16 @@ const parseSpritesheetData = (mapData: TiledMapData): SpritesheetData => {
             scale: 1
         }
     };
+}
+
+/** Add tiles in this layer to list */
+const addAllTilesInLayerToList = (list: [number, number][], layer: TiledLayerData, columns: number) => {
+    layer.data.reduce((acc: [number, number][], tile, index) => {
+        if (tile > 0) {
+            const x = (index % columns);
+            const y = Math.floor(index / columns);
+            acc.push([x, y]);    
+        }
+        return acc;
+    }, list);
 }
