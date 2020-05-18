@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import './ipad.css';
 import { WMSData, Categories } from 'constants/wmsData';
 
@@ -60,11 +60,29 @@ const data: WMSData[] = [{
     description: "Cassette Player",
 }];
 
-const IPad = () => {
+interface Props {
+    selectedProduct?: string;
+}
+const IPad = (props: Props) => {
+    const tableRef = useRef<HTMLTableElement>(null);
+
+    useEffect(() => {
+        if (!tableRef.current) return;
+        const table = tableRef.current;
+        
+        // add highlight class 
+        const row = table.querySelector(`tr[data-code="${props.selectedProduct}"]`)
+        row?.classList.add("highlight");
+        row?.scrollIntoView({ block: 'end'});
+        return () => {
+            table.querySelector(".highlight")?.classList.remove("highlight");
+        }
+    }, [props.selectedProduct]);
 
     const renderContent = () => {
         return (
-            <table>
+            <table ref={tableRef}>
+                <tbody>
                 <tr><td colSpan={3} className="category-header-a">A. Fast-moving</td></tr>
                 {data.filter(row => row.category === Categories.A).map(row => renderRow(row))}
                 <tr><td colSpan={3} className="category-header-b">B. Medium-moving</td></tr>
@@ -73,13 +91,14 @@ const IPad = () => {
                 {data.filter(row => row.category === Categories.C).map(row => renderRow(row))}
                 <tr><td colSpan={3} className="category-header-d">D. Not-moving</td></tr>
                 {data.filter(row => row.category === Categories.D).map(row => renderRow(row))}
+                </tbody>
             </table>
         )
     }
 
     const renderRow = (row: WMSData) => {
         return (
-            <tr>
+            <tr key={row.productCode} data-code={row.productCode}>
                 <td>{row.productCode}</td>
                 <td>{row.description}</td>
                 <td>{row.slotting || ""}</td>

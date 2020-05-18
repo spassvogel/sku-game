@@ -10,6 +10,7 @@ import { WarehouseStore } from "constants/warehouseStore";
 import { reducer, initialState } from "./store/sceneStore";
 import { PixiPlugin } from 'gsap/all';
 import { gsap } from 'gsap'
+import Guy from "./pixi/Guy";
 
 PixiPlugin.registerPIXI(PIXI);
 gsap.registerPlugin(PixiPlugin);
@@ -22,6 +23,7 @@ export interface Props {
     tilemap: string;
     width: number;
     height: number;
+    onProductClick: (productCode: string) => void;
 }
 
 const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
@@ -72,7 +74,11 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
         if (entry) return entry[0];
     }
 
-    const handleDragged = (boxName: string, event: PIXI.interaction.InteractionEvent) => {
+    const handleClick = (productCode: string, event: PIXI.interaction.InteractionEvent) => {
+        props.onProductClick(productCode);
+    }
+
+    const handleDragged = (productCode: string, event: PIXI.interaction.InteractionEvent) => {
         const position = event.data.global;
         const location = pointToSceneLocation(position); // tile location
 
@@ -81,7 +87,7 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
         let tint = 0xFFFFFF;
         if (rackLocation) {
             const otherBoxName = getBoxNameAtLocation(rackLocation);
-            if (!otherBoxName || otherBoxName === boxName) {
+            if (!otherBoxName || otherBoxName === productCode) {
                 tint = 0x00FF30; // Can drop here
             } else {
                 tint = 0xFF3300; // Can't drop on another box
@@ -90,7 +96,7 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
         setTint(event.currentTarget, tint);
     }
 
-    const handleBoxDragEnd = (boxName: string, event: PIXI.interaction.InteractionEvent) => {
+    const handleBoxDragEnd = (productCode: string, event: PIXI.interaction.InteractionEvent) => {
         const position = event.data.global;
         const location = pointToSceneLocation(position); // tile location
 
@@ -99,14 +105,14 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
         const rackOrDockLocation = getRackAtLocation(location) || getDockAtLocation(location);
         if (rackOrDockLocation) {
             const otherBoxName = getBoxNameAtLocation(rackOrDockLocation);
-            if (!otherBoxName || otherBoxName === boxName) {
-                dispatch({ type: 'placeBox', boxName, location: rackOrDockLocation!});
+            if (!otherBoxName || otherBoxName === productCode) {
+                dispatch({ type: 'placeBox', productCode, location: rackOrDockLocation!});
                 return;
             }
         }
 
         // Couldn't place, fly back to origin
-        const box = state.boxes[boxName];
+        const box = state.boxes[productCode];
         const originX = box.location[0] * mapData!.tilewidth;
         const originY = box.location[1] * mapData!.tileheight;
 
@@ -128,6 +134,7 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
                 location={box.location} 
                 tileWidth={mapData.tilewidth} 
                 tileHeight={mapData.tileheight}
+                onClick={(event) => handleClick(name, event) }
                 onDragged={(event) => handleDragged(name, event) }
                 onReleased={(event) => handleBoxDragEnd(name, event) }
                 key={name}
@@ -157,7 +164,7 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
                         { renderBoxes() }
                     </>
                 )}
-
+                <Guy atlas={`${process.env.PUBLIC_URL}/images/sprites/guy/guy.json`} x={64} y={64} />
             </Container>
             {/* {DEBUG_ACTIONQUEUE && (
                 <div style={{ position: 'absolute', bottom: 0}}>

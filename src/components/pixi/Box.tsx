@@ -13,6 +13,7 @@ interface Props {
     tileWidth: number;
     tileHeight: number;
     behindWall?: boolean;
+    onClick?: (event: PIXI.interaction.InteractionEvent) => void;
     onDragged?: (event: PIXI.interaction.InteractionEvent) => void;
     onReleased?: (event: PIXI.interaction.InteractionEvent) => void;
     delay?: number; // Wait this long before showing
@@ -39,22 +40,12 @@ const Box = (props: Props & React.ComponentProps<typeof Container>) => {
         };
     }, [location, tileWidth, tileHeight]);
     
-    // useEffect(() => {
-    //     // Pop in animation!
-    //     gsap.from(ref.current, { 
-    //       duration: 1,
-    //       ease: "elastic.out(2, 0.5)",
-    //       pixi: { 
-    //         visible: false,
-    //         scale: .1, 
-    //       }
-    //     }).delay(props.delay || 0);
-    // }, [props.delay]);
-
     const onDragStart = (event: PIXI.interaction.InteractionEvent) => {
         data.current = event.data;
         event.currentTarget.zIndex = 2;
         event.stopPropagation(); 
+        if (props.onClick) props.onClick(event);
+
         offset.current = data.current.getLocalPosition(ref.current!);
 
         imgRef.current!.visible = false;
@@ -77,8 +68,7 @@ const Box = (props: Props & React.ComponentProps<typeof Container>) => {
             const position = new PIXI.Point(parentPos.x - offset.current!.x, parentPos.y - offset.current!.y);
 
             ref.current!.position = position;
-            if (props.onDragged)
-                props.onDragged(event);
+            if (props.onDragged) props.onDragged(event);
         }
     }
 

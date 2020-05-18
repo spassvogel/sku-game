@@ -26,6 +26,10 @@
     border-left: 1px solid lightgrey;
 }
 
+.ipad .content .highlight {
+    background: yellow;
+}
+
 .ipad .content .category-header-a {
     background-color: #eb3223;
     color: white;

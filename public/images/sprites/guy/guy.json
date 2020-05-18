@@ -1,0 +1,57 @@
+{
+    "meta": {
+        "image": "guy.png",
+        "size": {"w":96, "h": 128}
+    },
+    "frames": {
+        "front1": {
+            "frame": {"x":0, "y":0, "w":32, "h":32},
+            "sourceSize": {"w": 32, "h": 32}
+            
+        },
+        "front2": {
+            "frame": {"x":32, "y":0, "w":32, "h":32},
+            "sourceSize":{"w": 32, "h": 32}
+        },
+        "front3": {
+            "frame": {"x":64, "y":0, "w":32, "h":32},
+            "sourceSize":{"w": 32, "h": 32}
+        },
+        "left1": {
+            "frame": {"x":0, "y":32, "w":32, "h":32},
+            "sourceSize": {"w": 32, "h": 32}
+        },
+        "left2": {
+            "frame": {"x":32, "y":32, "w":32, "h":32},
+            "sourceSize":{"w": 32, "h": 32}
+        },
+        "left3": {
+            "frame": {"x":64, "y":32, "w":32, "h":32},
+            "sourceSize":{"w": 32, "h": 32}
+        },
+        "right1": {
+            "frame": {"x":0, "y":64, "w":32, "h":32},
+            "sourceSize": {"w": 32, "h": 32}
+        },
+        "right2": {
+            "frame": {"x":32, "y":64, "w":32, "h":32},
+            "sourceSize":{"w": 32, "h": 32}
+        },
+        "right3": {
+            "frame": {"x":64, "y":64, "w":32, "h":32},
+            "sourceSize":{"w": 32, "h": 32}
+        },
+        "back1": {
+            "frame": {"x":0, "y":96, "w":32, "h":32},
+            "sourceSize": {"w": 32, "h": 32}
+        },
+        "back2": {
+            "frame": {"x":32, "y":96, "w":32, "h":32},
+            "sourceSize":{"w": 32, "h": 32}
+        },
+        "back3": {
+            "frame": {"x":64, "y":96, "w":32, "h":32},
+            "sourceSize":{"w": 32, "h": 32}
+        }
+    }
+}
