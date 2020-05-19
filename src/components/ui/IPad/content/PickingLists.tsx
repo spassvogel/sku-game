@@ -1,7 +1,6 @@
-import React, { useEffect, useRef, useContext } from "react";
+import React, { useContext } from "react";
 import { AppContext } from "components/context/AppProvider";
-import { PickingList } from "store";
-
+import { PickingList } from "reducers/pickingListsReducer";
 
 const PickingLists = () => {
   const { state } = useContext(AppContext);
