@@ -15,7 +15,6 @@ interface Props {
   atlas: string;
 }
 
-
 //
 const Guy = forwardRef<PIXI.Container, any>((props: Props & React.ComponentProps<typeof Container>, ref) => {
   const {
@@ -23,9 +22,10 @@ const Guy = forwardRef<PIXI.Container, any>((props: Props & React.ComponentProps
     ...containerProps
   } = props;
 
-  const [frames, setFrames] = useState<{ [key in Orientation]: PIXI.Texture[]}|null>(null);
+  const [frames, setFrames] = useState<{ [key: string]: PIXI.Texture[]}|null>(null);
 
   const [orientation, setOrientation] = useState<Orientation>(Orientation.right);
+  const [carryBox, setCarryBox] = useState<boolean>(true);
   const app = useApp();
   const lastPositionPoint = useRef<PIXI.Point>();
   //const orientation = useRef<Orientation>();
@@ -68,14 +68,14 @@ const Guy = forwardRef<PIXI.Container, any>((props: Props & React.ComponentProps
     app.loader.add(atlas).load((_, resource) => {
       const allFrames = resource[atlas]!.data.frames;
       const indexedTextures = Object.keys(allFrames).reduce((acc: any, frame: string) => {
-        // frames are in the format of: 'front1', 'front2' etc
-        // create a mapping keyed by `orientation`
-        const frameName = frame.substring(0, frame.length - 1);
-        const orientation = frameName as Orientation;
-        if (!acc[orientation]) {
-          acc[orientation] = [];
+        // frames are in the format of: 'front1', 'front2', 'left-box1' etc
+        // create a mapping keyed by the part without the number
+        const animation = frame.substring(0, frame.length - 1);
+        //const orientation = frameName as Orientation;
+        if (!acc[animation]) {
+          acc[animation] = [];
         }
-        acc[orientation].push(PIXI.Texture.from(frame));
+        acc[animation].push(PIXI.Texture.from(frame));
         return acc;
       }, {});
 
@@ -84,6 +84,7 @@ const Guy = forwardRef<PIXI.Container, any>((props: Props & React.ComponentProps
   }, [app.loader, atlas]);
 
   if (!frames) return null;
+  const animationFrames = frames[`${orientation}${carryBox ? '-box': ''}`];
   return (
     <Container ref={ref}       
       { ...containerProps}
@@ -91,7 +92,7 @@ const Guy = forwardRef<PIXI.Container, any>((props: Props & React.ComponentProps
       <SpriteAnimated
         animationSpeed={0.15}
         isPlaying={true}
-        textures={frames[orientation]}
+        textures={animationFrames}
         anchor={[0, 0.1]}
       />
     </Container>
