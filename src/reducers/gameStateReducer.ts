@@ -1,4 +1,8 @@
-import { StoreState, GameState } from "store";
+
+export enum GameState {
+  placingBoxes,
+  pickingBoxes,
+}
 
 export type GameStateAction =
  | { type: 'startPicking' };

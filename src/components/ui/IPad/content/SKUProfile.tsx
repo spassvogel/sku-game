@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useContext } from "react";
 import { AppContext } from "components/context/AppProvider";
-import { WMSData, Categories } from "store";
+import { Categories, WMSData } from "reducers/wmsReducer";
 
 
 interface Props {

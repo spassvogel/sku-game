@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 import { AppContext } from 'components/context/AppProvider';
-import { GameState } from 'store';
 import './ipad.css';
 import SKUProfile from './content/SKUProfile';
 import PickingLists from './content/PickingLists';
+import { GameState } from 'reducers/gameStateReducer';
 
 interface Props {
   selectedProduct?: string;

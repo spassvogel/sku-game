@@ -15,35 +15,32 @@
 // };
 
 import React, { createContext, useReducer } from 'react';
-import { StoreState, initialState } from 'store';
+import { AppState, initialState } from 'store';
 import { gameStateReducer, GameStateAction } from 'reducers/gameStateReducer';
+import { warehouseReducer, WarehouseAction } from 'reducers/warehouseReducer';
 
 //import { productReducer, shoppingCartReducer } from './reducers';
 
 
 
 const AppContext = createContext<{
-  state: StoreState;
+  state: AppState;
   dispatch: React.Dispatch<AnyAction>;
 }>({
   state: initialState,
   dispatch: () => null
 });
 
-type Action =
- | { type: 'ADD' }
- | { type: 'CREATE', create: object }
- | { type: 'DELETE', id: string };
 
-type AnyAction = Action | GameStateAction;
+type AnyAction = GameStateAction | WarehouseAction;
 
-const reducer = (state: StoreState = initialState, action: AnyAction) => {
+const reducer = (state: AppState, action: AnyAction) => {
   return {
     gameState: gameStateReducer(state.gameState, action as GameStateAction),
     wms: state.wms, // read only
     pickingLists: state.pickingLists, // read only
+    warehouse: warehouseReducer(state.warehouse, action as WarehouseAction),    
   };
-  //products: productReducer(products, action),
 };
 
 const AppProvider: React.FC = ({ children }) => {

@@ -18,14 +18,12 @@ function App() {
   return (
     <AppProvider>
       <div className="App">
-        <Stage width={width} height={height}>
-          <Scene 
-            tilemap="scenes/level1.json" 
-            width={width} 
-            height={height}
-            onProductClick={setSelectedProduct}
-          />
-        </Stage>
+        <Scene 
+          tilemap="scenes/level1.json" 
+          width={width} 
+          height={height}
+          onProductClick={setSelectedProduct}
+        />
         <IPad selectedProduct={selectedProduct}/>
         <StartButton />
       </div>

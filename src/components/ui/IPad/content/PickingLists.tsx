@@ -1,12 +1,9 @@
 import React, { useEffect, useRef, useContext } from "react";
 import { AppContext } from "components/context/AppProvider";
-import { WMSData, Categories, PickingList } from "store";
-
-
+import { PickingList } from "store";
 
 
 const PickingLists = () => {
-  const tableRef = useRef<HTMLTableElement>(null);
   const { state } = useContext(AppContext);
   const data = state.pickingLists;
   const productNameMap = state.wms.reduce((acc: {[key: string]: string}, value) => {

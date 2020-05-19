@@ -1,13 +1,12 @@
-import React, { useEffect, useState, useRef, useCallback, useReducer } from "react";
+import React, { useEffect, useState, useRef, useCallback, useContext } from "react";
 import { Container, Stage } from '@inlet/react-pixi';
 import { AStarFinder } from "astar-typescript";
 import { TiledMapData } from 'constants/tiledMapData';
 import Tilemap from './Tilemap';
 import BridgedStage from "./pixi/util/BridgedStage";
+import { AppContext } from "./context/AppProvider";
 import * as PIXI from 'pixi.js';
 import Box from "./pixi/Box";
-import { WarehouseStore } from "constants/warehouseStore";
-import { reducer, initialState } from "./store/sceneStore";
 import { PixiPlugin } from 'gsap/all';
 import { gsap, Linear } from 'gsap'
 import Guy from "./pixi/Guy";
@@ -28,14 +27,13 @@ export interface Props {
 
 const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
   const {tilemap, width, height, ...restProps} = props;
-  // const [store, setStore] = useState<WarehouseStore>()
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const {state, dispatch} = useContext(AppContext);
+  const {warehouse} = state;
   const guyRef = useRef<PIXI.AnimatedSprite>(null);
   const [mapData, setMapData] = useState<TiledMapData>();
   const [rackLocations, setRackLocations] = useState<[number, number][]>([]);
   const [dockLocations, setDockLocations] = useState<[number, number][]>([]);
   const [wallLocations, setWallLocations] = useState<[number, number][]>([]);   
-
   const ref = useRef<PIXI.Container>(null);
 
   const jsonPath = `${process.env.PUBLIC_URL}/${tilemap}`;
@@ -70,7 +68,7 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
   }, [mapData]);
   
   const getBoxNameAtLocation = (location: [number, number]) => {
-    const entry = Object.entries(state.boxes)
+    const entry = Object.entries(warehouse.boxes)
       .find(([name, box]) => box.location[0] === location[0] && box.location[1] === location[1]);
     if (entry) return entry[0];
   }
@@ -113,7 +111,7 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
     }
 
     // Couldn't place, fly back to origin
-    const box = state.boxes[productCode];
+    const box = warehouse.boxes[productCode];
     const originX = box.location[0] * mapData!.tilewidth;
     const originY = box.location[1] * mapData!.tileheight;
 
@@ -130,14 +128,14 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
   const renderBoxes = () => {
     if (!mapData || !wallLocations.length) return null;
     
-    return Object.entries(state.boxes).map(([name, box]) => (
+    return Object.entries(warehouse.boxes).map(([name, box]) => (
       <Box 
         location={box.location} 
         tileWidth={mapData.tilewidth} 
         tileHeight={mapData.tileheight}
-        onClick={(event) => handleClick(name, event) }
-        onDragged={(event) => handleDragged(name, event) }
-        onReleased={(event) => handleBoxDragEnd(name, event) }
+        onClick={(event) => handleClick(name, event)}
+        onDragged={(event) => handleDragged(name, event)}
+        onReleased={(event) => handleBoxDragEnd(name, event)}
         key={name}
         behindWall={isBehindWall(box.location, wallLocations)}
       />
@@ -191,7 +189,7 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
   };
 
   return (
-    <>
+    <Stage width={width} height={height}>
       <Container 
         ref={ref}
         interactive={true}
@@ -230,7 +228,7 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
           </ul>
         </div>
       )} */}
-    </>
+    </Stage>
   );
 }
 

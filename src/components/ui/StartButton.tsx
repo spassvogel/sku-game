@@ -6,7 +6,8 @@ const StartButton = () => {
   const { state, dispatch } = useContext(AppContext);
   const text = state.gameState;
 
-  const handleClick = () => {    
+  const handleClick = () => {
+    
     dispatch({ type: 'startPicking'});
   };
   return (
