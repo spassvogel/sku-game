@@ -13,6 +13,7 @@ export interface WMSData {
   slotting?: string;
 }
 
+
 export const initialWMSState = [{
   category: Categories.A,
   productCode: "IRN 590",

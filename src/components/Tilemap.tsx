@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TiledMapData, TiledLayerData, TiledTilesetData } from 'constants/tiledMapData';
-import { Container, Text } from '@inlet/react-pixi';
+import { Container, Text, Graphics } from '@inlet/react-pixi';
 import { useEffect } from 'react';
 import { SpritesheetData, SpriteData } from 'constants/spritesheetData';
 import RectTileLayer from 'components/pixi/RectTileLayer';
@@ -64,7 +64,7 @@ const Tilemap = (props: Props) => {
       setLayers(layers);
       
       if (DEBUG){
-        setDebug(getDebug(data.layers[0].data.length, data.layers[0].width, tileset.tilewidth, tileset.tileheight, rackLocations))
+        setDebug(getDebug(data.layers[0].data.length, data.layers[0].width, tileset.tilewidth, tileset.tileheight, wallLocations))
       }
     });
 
@@ -86,28 +86,32 @@ const getDebug = (tileCount: number, columns: number, tileWidth: number, tileHei
     const x = location[0] * tileWidth;
     const y = location[1] * tileHeight;
     var style = {
-      font : 'bold italic 12px Arial',
-      fill : '#F7EDCA',
-      stroke : '#4a1850',
-      strokeThickness : 2,
+      fontSize: 12,
+      align: 'center',
+      fill : '0x0',
+      strokeThickness : 1,
       wordWrap : true,
       wordWrapWidth : 440
     };
     // tile index
-    elements.push(<Text key={`${x},${y}`} style={style} text={`${i}`} x={x} y={y} />);
+    // elements.push(<Text key={`${x},${y}`} style={style} text={`${i}`} x={x} y={y}/>);
+
+    // tile location
+    elements.push(<Text key={`${x},${y}`} style={style} text={`[${location[0]},${location[1]}]`} x={x} y={y}/>);
+
     // // blocked
-    // elements.push(<Graphics
-    //   key={`blocked_${x},${y}`}
-    //   x={x} y={y}
-    //   draw={graphics => {
-    //     const line = 3;
-    //     const blocked = blockedTiles.some((loc) => loc[0] === location[0] && loc[1] === location[1]);
-    //     const color = blocked ? 0xFF3300 : 0x00FF00;
-    //     graphics.lineStyle(line, color);
-    //     graphics.drawRect(line / 2, line / 2, tileWidth - line / 2, tileHeight - line / 2);
-    //     graphics.endFill();
-    //   }}
-    // />)
+    elements.push(<Graphics
+      key={`blocked_${x},${y}`}
+      x={x} y={y}
+      draw={graphics => {
+        const line = 1;
+        const blocked = blockedTiles.some((loc) => loc[0] === location[0] && loc[1] === location[1]);
+        const color = blocked ? 0xFF3300 : 0x00FF00;
+        graphics.lineStyle(line, color);
+        graphics.drawRect(line / 2, line / 2, tileWidth - line / 2, tileHeight - line / 2);
+        graphics.endFill();
+      }}
+    />)
   }
   return elements;
 }

@@ -11,7 +11,6 @@ const PickingLists = () => {
     };
     return acc;
   }, {});
-
   // useEffect(() => {
   //   if (!tableRef.current) return;
   //   const table = tableRef.current;
@@ -43,19 +42,23 @@ const PickingLists = () => {
           <tr>
             <td colSpan={3}>Order no: {pList.orderNo}</td>
           </tr>
-          { pList.products.map(p => renderProduct(p)) }
+          { pList.products.map(p => renderProduct(pList, p)) }
         </tbody>
       </table>
     )
   }
 
-  const renderProduct = (productCode: string) => (
-    <tr key={productCode}>
-      <td></td>
-      <td>{productCode}</td>
-      <td>{productNameMap[productCode]}</td>
-    </tr>
-  )
+  const renderProduct = (pList: PickingList, productCode: string) => {
+    const completed = pList.pickedProducts?.some(p => p === productCode);
+
+    return (
+      <tr key={productCode} className={completed ? "completed" : ""}>
+        <td></td>
+        <td>{productCode}</td>
+        <td>{productNameMap[productCode]}</td>
+      </tr>
+    )
+  }
 
   return (
     <>

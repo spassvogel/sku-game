@@ -41,7 +41,7 @@ const Box = (props: Props & React.ComponentProps<typeof Container>) => {
   
   const onDragStart = (event: PIXI.interaction.InteractionEvent) => {
     data.current = event.data;
-    event.currentTarget.zIndex = 2;
+    event.currentTarget.zIndex = 4;
     event.stopPropagation(); 
     if (props.onClick) props.onClick(event);
 
@@ -52,7 +52,11 @@ const Box = (props: Props & React.ComponentProps<typeof Container>) => {
   }
   
   const onDragEnd = (event: PIXI.interaction.InteractionEvent) => {
-    event.currentTarget.zIndex = 1;
+    if (props.behindWall) {
+      event.currentTarget.zIndex = 3;
+    } else {
+      event.currentTarget.zIndex = 1;
+    }
     data.current = undefined;
 
     if (props.onReleased) props.onReleased(event);
@@ -78,8 +82,8 @@ const Box = (props: Props & React.ComponentProps<typeof Container>) => {
       { ...props }
       x={x}
       y={y}
-      interactive={true}
       ref={ref}
+      zIndex={(props.behindWall) ? 3 : 1} // boxes in front: 1, guy: 2, boxes in back: 3
       mousedown={onDragStart}
       touchstart={onDragStart}
       mouseup={onDragEnd}

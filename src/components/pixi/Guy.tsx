@@ -1,4 +1,4 @@
-import React, { useState, useEffect, forwardRef, useRef } from 'react';
+import React, { useState, useEffect, forwardRef, useRef, memo } from 'react';
 import { Sprite, AnimatedSprite, useApp, useTick, Container } from "@inlet/react-pixi";
 import * as PIXI from 'pixi.js';
 import { isMainThread } from 'worker_threads';
@@ -13,19 +13,20 @@ export enum Orientation {
 
 interface Props {
   atlas: string;
+  carryBox: boolean;
 }
 
 //
 const Guy = forwardRef<PIXI.Container, any>((props: Props & React.ComponentProps<typeof Container>, ref) => {
   const {
     atlas,
+    carryBox,
     ...containerProps
   } = props;
 
   const [frames, setFrames] = useState<{ [key: string]: PIXI.Texture[]}|null>(null);
 
   const [orientation, setOrientation] = useState<Orientation>(Orientation.right);
-  const [carryBox, setCarryBox] = useState<boolean>(true);
   const app = useApp();
   const lastPositionPoint = useRef<PIXI.Point>();
   //const orientation = useRef<Orientation>();
@@ -82,11 +83,13 @@ const Guy = forwardRef<PIXI.Container, any>((props: Props & React.ComponentProps
       setFrames(indexedTextures);
     });
   }, [app.loader, atlas]);
-
+console.log('rendering guy')
   if (!frames) return null;
   const animationFrames = frames[`${orientation}${carryBox ? '-box': ''}`];
   return (
-    <Container ref={ref}       
+    <Container 
+      ref={ref}
+      zIndex={2}
       { ...containerProps}
     >
       <SpriteAnimated
@@ -99,4 +102,8 @@ const Guy = forwardRef<PIXI.Container, any>((props: Props & React.ComponentProps
   )
 });
 
+// const areEqual = (a: React.ComponentProps<typeof Container>, b: React.ComponentProps<typeof Container>) => {
+//   return true;
+// }
+// export default memo(Guy, () => (true));
 export default Guy;

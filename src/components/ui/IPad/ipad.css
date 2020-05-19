@@ -23,6 +23,11 @@
   width: 100%;
 }
 
+/** picking list*/
+.ipad .content .completed td {
+  text-decoration: line-through;
+}
+
 .ipad .content td {
   vertical-align: top;
   border-bottom: 1px solid grey;

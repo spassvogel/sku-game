@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback, useContext } from "react";
+import React, { useEffect, useState, useRef, useCallback, useContext, useMemo } from "react";
 import { Container, Stage } from '@inlet/react-pixi';
 import { AStarFinder } from "astar-typescript";
 import { TiledMapData } from 'constants/tiledMapData';
@@ -10,6 +10,9 @@ import Box from "./pixi/Box";
 import { PixiPlugin } from 'gsap/all';
 import { gsap, Linear } from 'gsap'
 import Guy from "./pixi/Guy";
+import { GameState } from "reducers/gameStateReducer";
+import { PickingList } from "reducers/pickingListsReducer";
+import { AppState } from "appState";
 
 PixiPlugin.registerPIXI(PIXI);
 gsap.registerPlugin(PixiPlugin);
@@ -30,6 +33,9 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
   const {state, dispatch} = useContext(AppContext);
   const {warehouse} = state;
   const guyRef = useRef<PIXI.AnimatedSprite>(null);
+  const [carryBox, setCarryBox] = useState<boolean>(false);
+  const [guyPosition, setGuyPosition] = useState<[number, number]>([10, 12]);
+
   const [mapData, setMapData] = useState<TiledMapData>();
   const [rackLocations, setRackLocations] = useState<[number, number][]>([]);
   const [dockLocations, setDockLocations] = useState<[number, number][]>([]);
@@ -140,12 +146,129 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
         onDragged={(event) => handleDragged(name, event)}
         onReleased={(event) => handleBoxDragEnd(name, event)}
         key={name}
-        behindWall={isBehindWall(box.location, wallLocations)}
+        behindWall={isNorthOfWall(box.location, wallLocations)}
+        interactive={state.gameState === GameState.placingBoxes}
       />
     ));
   }
 
+  /** Picking logic! */
+
+  /** Returns true if the tile is blocked */
+  const locationIsBlocked = useCallback((location: [number, number]) => {
+    return wallLocations.some((l) => l[0] === location[0] && l[1] === location[1]);
+  }, [wallLocations]);
+
+  const aStar = useMemo(() => {
+    if (!mapData || !wallLocations.length) {
+        return null;
+    }
+    const matrix: number[][] = [];
+    for (let y = 0; y < mapData.height; y++) {
+        const row: number[] = [];
+        for (let x = 0; x < mapData.width; x++) {
+            const location: [number, number] = [x, y];
+            const blocked = locationIsBlocked(location);
+            row.push(blocked ? 1 : 0);
+        }
+        matrix.push(row);
+    }
+    return new AStarFinder({
+        grid: {
+            matrix
+        },
+        diagonalAllowed: false,
+        includeStartNode: false,
+        heuristic: "Manhatten",
+        weight: 0,
+    });
+  }, [mapData, locationIsBlocked, wallLocations]);
+
+  const getProductLocation = useCallback((productCode: string) => {
+    return state.warehouse.boxes[productCode].location;
+  }, [state.warehouse.boxes]);
+
+  const walking = useRef<boolean>(false);
+  useEffect(() => {
+    // Picking boxes part begins
+    if(state.gameState === GameState.pickingBoxes && !walking.current) {
+      walking.current = true;
+
+      const convertLocation = (location: [number, number]) => {
+        // This is the format AStarFind works with
+        return { x: location[0], y: location[1] }
+      }
+
+      const startPicking = (pickingList: PickingList) => {
+        const { orderNo } = pickingList;
+        const startLocation = convertLocation([10, 12]); // absolute start location       
+        let pathStartLocation = startLocation; // Start location of the current objective (product)
+        const tl = gsap.timeline({
+          repeat: 0, 
+          repeatDelay: 0
+        });
+        const guy = guyRef.current;
+
+
+        // Note: here we attempt to show the picking animation as one big gsap.timeline. 
+        // Consider finding the first unpicked item and walk there
+        pickingList.products.forEach(productCode => {
+          console.log(`We need to pick ${productCode}. It's location is ${getProductLocation(productCode)}`);
+          
+          // Determine the path to this product
+          const path = aStar?.findPath(pathStartLocation, convertLocation(getProductLocation(productCode))) || [];
+          console.log('startloc:', pathStartLocation)
+          //console.log(path)
+          
+          // create animation to walk this path
+          path.forEach((position: number[]) => {
+            tl.to(guy, {
+              ease: Linear.easeNone,
+              pixi: { 
+                x: position[0] * mapData!.tilewidth,
+                y: position[1] * mapData!.tileheight
+              }, 
+              duration: .1
+            });
+            pathStartLocation = convertLocation([position[0], position[1]]) 
+          }); 
+          tl.to(guy, {
+            onComplete: () => { 
+              // completed picking product
+              setCarryBox(true);
+              dispatch({ type: 'completeProductPick', productCode, orderNo});
+              console.log('completed p', productCode, orderNo)
+              //setGuyPosition([pathStartLocation.x, pathStartLocation.y]);
+              //guyRef.current!.position = new PIXI.Point(pathStartLocation.x * mapData!.tilewidth, pathStartLocation.y * mapData!.tileheight)
+            },
+          })
+        });
+        // Go back to start
+        const path = aStar?.findPath(pathStartLocation, startLocation) || [];
+        path.forEach((position: number[]) => {
+          pathStartLocation = convertLocation([position[0], position[1]]) 
+          tl.to(guy, {
+            ease: Linear.easeNone,
+            pixi: { 
+              x: position[0] * mapData!.tilewidth,
+              y: position[1] * mapData!.tileheight
+            }, 
+            duration: .1,
+            onComplete: () => { 
+              // completed picking list
+            }, 
+          });
+        }); 
+      }
+
+      startPicking({ ...state.pickingLists[0]});
+    }
+  }, [state.gameState, getProductLocation, aStar, mapData, dispatch, state.pickingLists]);
+
+  
+
   const handleGuyDown = () => {
+    // test for the guy to walk
     if (!mapData || !guyRef.current) return;
     gsap.killTweensOf(guyRef.current);
     const path: [number, number][] = [
@@ -188,7 +311,6 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
         duration: 1
       });
     })
-
   };
 
   return (
@@ -212,32 +334,23 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
             { renderBoxes() }
             <Guy 
               atlas={`${process.env.PUBLIC_URL}/images/sprites/guy/guy.json`} 
-              x={10 * mapData.tilewidth} 
-              y={12 * mapData.tileheight} 
+              carryBox={carryBox}
+              x={guyPosition[0] * mapData.tilewidth} 
+              y={guyPosition[1] * mapData.tileheight} 
               ref={guyRef}
               interactive
-              mousedown={handleGuyDown}
+              mousedown={handleGuyDown} //todo :remove
             />
           </>
         )}
       </Container>
-      {/* {DEBUG_ACTIONQUEUE && (
-        <div style={{ position: 'absolute', bottom: 0}}>
-          <h2>ActionQueue</h2>
-          <ul>
-            {scene.actionQueue.map((action) => (
-              <li key={JSON.stringify(action)}>{JSON.stringify(action)}</li>
-            ))}
-          </ul>
-        </div>
-      )} */}
     </Stage>
   );
 }
 
 export default Scene;
 
-
+// Sets tint on box
 const setTint = (obj: PIXI.DisplayObject, tint: number) => {
   const ghost = (obj as PIXI.Container).children.find(c => c.name === 'ghost');
   if (ghost) {
@@ -246,7 +359,6 @@ const setTint = (obj: PIXI.DisplayObject, tint: number) => {
 }
 
 // Returns true if the tile south of this one is a wall
-const isBehindWall = (location: [number, number], wallLocations: [number, number][]) => {
-  const behind = wallLocations.some(wL => wL[0] === location[0] && wL[1] === location[1] + 1);
-  return behind;
+const isNorthOfWall = (location: [number, number], wallLocations: [number, number][]) => {
+  return wallLocations.some(wL => wL[0] === location[0] && wL[1] === location[1] + 1);
 }
