@@ -1,30 +1,30 @@
-// import React, { useState, createContext } from "react";
 
-// // Create Context Object
-// export const CounterContext = createContext([0, null]);
+export interface WMSData {
+  category: Categories;
+  productCode: string;
+  description: string; 
+  slotting?: string;
+}
 
-// // Create a provider for components to consume and subscribe to changes
-// export const CounterContextProvider = props => {
-//   const [count, setCount] = useState(0);
+export enum Categories {
+  A,
+  B,
+  C,
+  D
+}
 
-//   return (
-//     <CounterContext.Provider value={[count, setCount]}>
-//       {props.children}
-//     </CounterContext.Provider>
-//   );
-// };
+export enum GameState {
+  placingBoxes,
+  pickingBoxes,
+}
 
-import React, { createContext, useReducer } from 'react';
-import { WMSData, Categories } from 'constants/wmsData';
-
-//import { productReducer, shoppingCartReducer } from './reducers';
-
-
-interface StoreState {
+export interface StoreState {
+  gameState: GameState,
   wms: WMSData[];
 }
 
-const initialState: StoreState = {
+export const initialState: StoreState = {
+  gameState: GameState.placingBoxes,
   wms: [{
     category: Categories.A,
     productCode: "IRN 590",
@@ -83,33 +83,3 @@ const initialState: StoreState = {
     description: "Cassette Player",      
   }],
 }
-
-const AppContext = createContext<{
-  state: StoreState;
-  dispatch: React.Dispatch<any>;
-}>({
-  state: initialState,
-  dispatch: () => null
-});
-
-type Action =
- | { type: 'ADD' }
- | { type: 'CREATE', create: object }
- | { type: 'DELETE', id: string };
-
-const mainReducer = (state: StoreState, action: Action) => ({
-    wms: state.wms
-  //products: productReducer(products, action),
-});
-
-const AppProvider: React.FC = ({ children }) => {
-  const [state, dispatch] = useReducer(mainReducer, initialState);
-
-  return (
-    <AppContext.Provider value={{state, dispatch}}>
-      {children}
-    </AppContext.Provider>
-  )
-}
-
-export { AppContext, AppProvider };

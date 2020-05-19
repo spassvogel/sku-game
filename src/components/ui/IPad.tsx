@@ -1,14 +1,15 @@
 import React, { useEffect, useRef, useContext } from 'react';
+import { AppContext } from 'components/context/AppProvider';
+import { Categories, WMSData } from 'store';
 import './ipad.css';
-import { WMSData, Categories } from 'constants/wmsData';
-import { AppContext } from 'components/store/context';
 
 interface Props {
   selectedProduct?: string;
 }
 const IPad = (props: Props) => {
   const tableRef = useRef<HTMLTableElement>(null);
-  const { state, dispatch } = useContext(AppContext);
+  const { state } = useContext(AppContext);
+  const data = state.wms;
 
   useEffect(() => {
     if (!tableRef.current) return;
@@ -19,10 +20,10 @@ const IPad = (props: Props) => {
     row?.classList.add("highlight");
     row?.scrollIntoView({ block: 'end'});
     return () => {
+    // Remove highlight class from prevously highlighted row
       table.querySelector(".highlight")?.classList.remove("highlight");
     }
   }, [props.selectedProduct]);
-  const data = state.wms;
 
   const renderContent = () => {
     return (
