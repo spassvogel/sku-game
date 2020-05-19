@@ -1,4 +1,9 @@
 
+export enum GameState {
+  placingBoxes,
+  pickingBoxes,
+}
+
 export interface WMSData {
   category: Categories;
   productCode: string;
@@ -13,14 +18,14 @@ export enum Categories {
   D
 }
 
-export enum GameState {
-  placingBoxes,
-  pickingBoxes,
+export interface PickingList {
+  products: string[];
 }
 
 export interface StoreState {
   gameState: GameState,
   wms: WMSData[];
+  pickingLists: PickingList[];
 }
 
 export const initialState: StoreState = {
@@ -82,4 +87,5 @@ export const initialState: StoreState = {
     productCode: "CST 964",
     description: "Cassette Player",      
   }],
+  pickingLists: []
 }

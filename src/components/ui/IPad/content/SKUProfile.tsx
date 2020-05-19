@@ -1,12 +1,13 @@
-import React, { useEffect, useRef, useContext } from 'react';
-import { AppContext } from 'components/context/AppProvider';
-import { Categories, WMSData } from 'store';
-import './ipad.css';
+import React, { useEffect, useRef, useContext } from "react";
+import { AppContext } from "components/context/AppProvider";
+import { WMSData, Categories } from "store";
+
 
 interface Props {
   selectedProduct?: string;
 }
-const IPad = (props: Props) => {
+
+const SKUProfile = (props: Props) => {
   const tableRef = useRef<HTMLTableElement>(null);
   const { state } = useContext(AppContext);
   const data = state.wms;
@@ -51,15 +52,12 @@ const IPad = (props: Props) => {
       </tr>
     )
   }
-
   return (
-    <div className="ipad">
-      <div className="content">
-        <h2>SKU velocity profile</h2>
-        {renderContent()}
-      </div>
-    </div>      
+    <>
+      <h2>SKU velocity profile</h2>
+      {renderContent()}
+    </>
   )
 }
 
-export default IPad;
+export default SKUProfile;

@@ -29,9 +29,6 @@ const AppContext = createContext<{
   state: initialState,
   dispatch: () => null
 });
-// const AppContext = createContext<[StoreState, React.Dispatch<AnyAction>]>(
-//   [initialState, () => null]
-// );
 
 type Action =
  | { type: 'ADD' }
@@ -44,6 +41,7 @@ const reducer = (state: StoreState = initialState, action: AnyAction) => {
   return {
     gameState: gameStateReducer(state.gameState, action as GameStateAction),
     wms: state.wms, // read only
+    pickingLists: state.pickingLists, // read only
   };
   //products: productReducer(products, action),
 };
