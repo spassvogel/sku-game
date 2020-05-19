@@ -1,119 +1,64 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useContext } from 'react';
 import './ipad.css';
 import { WMSData, Categories } from 'constants/wmsData';
-
-const data: WMSData[] = [{
-    category: Categories.A,
-    productCode: "IRN 590",
-    description: "Clothes Iron",
-}, {
-    category: Categories.A,
-    productCode: "CAM 679",
-    description: "Digital Camera",
-}, {
-    category: Categories.B,
-    productCode: "PTV 555",
-    description: "Plasma TV Set",
-    slotting: "Usually sold with SPK 876"
-}, {
-    category: Categories.B,
-    productCode: "SPK 876",
-    description: "Home Theatre System/Speaker System",
-    slotting: "Usually sold with PTV 555"
-}, {
-    category: Categories.B,
-    productCode: "MWO 901",
-    description: "Microwave Oven",
-}, {
-    category: Categories.B,
-    productCode: "OTV 482",
-    description: "OLED TV Set",
-}, {
-    category: Categories.C,
-    productCode: "MIC 099",
-    description: "Microphone",
-    slotting: "Usually sold with DSC 743 as a karaoke set"
-}, {
-    category: Categories.C,
-    productCode: "WSH 322",
-    description: "Washing Machine",
-}, {
-    category: Categories.C,
-    productCode: "RFG 411",
-    description: "Refrigerator",
-}, {
-    category: Categories.C,
-    productCode: "SMX 041",
-    description: "Stand Mixer",
-}, {
-    category: Categories.C,
-    productCode: "DSC 743",
-    description: "Disco Ball",
-    slotting: "Usually sold with MIC 099 as a karaoke set"
-}, {
-    category: Categories.D,
-    productCode: "TPH 255",
-    description: "Telephone",
-}, {
-    category: Categories.D,
-    productCode: "CST 964",
-    description: "Cassette Player",
-}];
+import { AppContext } from 'components/store/context';
 
 interface Props {
-    selectedProduct?: string;
+  selectedProduct?: string;
 }
 const IPad = (props: Props) => {
-    const tableRef = useRef<HTMLTableElement>(null);
+  const tableRef = useRef<HTMLTableElement>(null);
+  const { state, dispatch } = useContext(AppContext);
 
-    useEffect(() => {
-        if (!tableRef.current) return;
-        const table = tableRef.current;
-        
-        // add highlight class 
-        const row = table.querySelector(`tr[data-code="${props.selectedProduct}"]`)
-        row?.classList.add("highlight");
-        row?.scrollIntoView({ block: 'end'});
-        return () => {
-            table.querySelector(".highlight")?.classList.remove("highlight");
-        }
-    }, [props.selectedProduct]);
-
-    const renderContent = () => {
-        return (
-            <table ref={tableRef}>
-                <tbody>
-                <tr><td colSpan={3} className="category-header-a">A. Fast-moving</td></tr>
-                {data.filter(row => row.category === Categories.A).map(row => renderRow(row))}
-                <tr><td colSpan={3} className="category-header-b">B. Medium-moving</td></tr>
-                {data.filter(row => row.category === Categories.B).map(row => renderRow(row))}
-                <tr><td colSpan={3} className="category-header-c">C. Slow-moving</td></tr>
-                {data.filter(row => row.category === Categories.C).map(row => renderRow(row))}
-                <tr><td colSpan={3} className="category-header-d">D. Not-moving</td></tr>
-                {data.filter(row => row.category === Categories.D).map(row => renderRow(row))}
-                </tbody>
-            </table>
-        )
+  useEffect(() => {
+    if (!tableRef.current) return;
+    const table = tableRef.current;
+    
+    // add highlight class 
+    const row = table.querySelector(`tr[data-code="${props.selectedProduct}"]`)
+    row?.classList.add("highlight");
+    row?.scrollIntoView({ block: 'end'});
+    return () => {
+      table.querySelector(".highlight")?.classList.remove("highlight");
     }
+  }, [props.selectedProduct]);
+  const data = state.wms;
 
-    const renderRow = (row: WMSData) => {
-        return (
-            <tr key={row.productCode} data-code={row.productCode}>
-                <td>{row.productCode}</td>
-                <td>{row.description}</td>
-                <td>{row.slotting || ""}</td>
-            </tr>
-        )
-    }
-
+  const renderContent = () => {
     return (
-        <div className="ipad">
-            <div className="content">
-                <h2>SKU velocity profile</h2>
-                {renderContent()}
-            </div>
-        </div>        
+      <table ref={tableRef}>
+        <tbody>
+        <tr><td colSpan={3} className="category-header-a">A. Fast-moving</td></tr>
+        {data.filter(row => row.category === Categories.A).map(row => renderRow(row))}
+        <tr><td colSpan={3} className="category-header-b">B. Medium-moving</td></tr>
+        {data.filter(row => row.category === Categories.B).map(row => renderRow(row))}
+        <tr><td colSpan={3} className="category-header-c">C. Slow-moving</td></tr>
+        {data.filter(row => row.category === Categories.C).map(row => renderRow(row))}
+        <tr><td colSpan={3} className="category-header-d">D. Not-moving</td></tr>
+        {data.filter(row => row.category === Categories.D).map(row => renderRow(row))}
+        </tbody>
+      </table>
     )
+  }
+
+  const renderRow = (row: WMSData) => {
+    return (
+      <tr key={row.productCode} data-code={row.productCode}>
+        <td>{row.productCode}</td>
+        <td>{row.description}</td>
+        <td>{row.slotting || ""}</td>
+      </tr>
+    )
+  }
+
+  return (
+    <div className="ipad">
+      <div className="content">
+        <h2>SKU velocity profile</h2>
+        {renderContent()}
+      </div>
+    </div>      
+  )
 }
 
 export default IPad;
