@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { AppContext } from "components/context/AppProvider";
+import './startButton.css';
 
 const StartButton = () => {
   const { state, dispatch } = useContext(AppContext);
@@ -9,7 +10,7 @@ const StartButton = () => {
     dispatch({ type: 'startPicking'});
   };
   return (
-    <button onClick={handleClick}><h1>Start {text}</h1></button>
+    <button onClick={handleClick} className="start-button"><h1>Start {text}</h1></button>
   );
 }
 

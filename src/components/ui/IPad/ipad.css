@@ -1,51 +1,54 @@
 .ipad {
-    background: url(/images/ui/ipad.png);
-    width: 290px;
-    height: 371px;
-    position: absolute;
-    right: 0;
-    top: 20px;
+  background: url(/images/ui/ipad.png);
+  width: 290px;
+  height: 371px;
+  position: absolute;
+  right: 0;
+  top: 20px;
 }
 
 .ipad .content {
-    left: 35px;
-    top: 38px;
-    position: absolute;
-    width: 223px;
-    height: 297px;
-    overflow-y: scroll;
-    padding-right: 10px;
-    box-sizing: border-box;
-    font-size: smaller;
-    /* background: purple; */
+  left: 35px;
+  top: 38px;
+  position: absolute;
+  width: 223px;
+  height: 297px;
+  overflow-y: scroll;
+  padding-right: 10px;
+  box-sizing: border-box;
+  font-size: smaller;
+}
+
+.ipad .content table {
+  width: 100%;
 }
 
 .ipad .content td {
-    vertical-align: top;
-    border-bottom: 1px solid grey;
-    border-left: 1px solid lightgrey;
+  vertical-align: top;
+  border-bottom: 1px solid grey;
+  border-left: 1px solid lightgrey;
 }
 
 .ipad .content .highlight {
-    background: yellow;
+  background: yellow;
 }
 
 .ipad .content .category-header-a {
-    background-color: #eb3223;
-    color: white;
+  background-color: #eb3223;
+  color: white;
 }
 
 .ipad .content .category-header-b {
-    background-color: #254683;
-    color: white;
+  background-color: #254683;
+  color: white;
 }
 
 .ipad .content .category-header-c {
-    background-color: #f2bd42;
-    color: white;
+  background-color: #f2bd42;
+  color: white;
 }
 
 .ipad .content .category-header-d {
-    background-color: #b7b7b7;
-    color: white;
+  background-color: #b7b7b7;
+  color: white;
 }
