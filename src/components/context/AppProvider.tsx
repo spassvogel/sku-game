@@ -2,6 +2,7 @@ import React, { createContext, useReducer } from 'react';
 import { AppState, initialState } from 'appState';
 import { gameStateReducer, GameStateAction } from 'reducers/gameStateReducer';
 import { warehouseReducer, WarehouseAction } from 'reducers/warehouseReducer';
+import { statusTextReducer, StatusTextAction } from 'reducers/statusTextReducer';
 
 
 const AppContext = createContext<{
@@ -13,11 +14,12 @@ const AppContext = createContext<{
 });
 
 
-type AnyAction = GameStateAction | WarehouseAction;
+type AnyAction = GameStateAction | WarehouseAction | StatusTextAction;
 
 const reducer = (state: AppState, action: AnyAction) => {
   return {
     gameState: gameStateReducer(state.gameState, action as GameStateAction),
+    statusText: statusTextReducer(state.statusText, action as StatusTextAction),
     wms: state.wms, // read only
     pickingLists: state.pickingLists, // read only
     warehouse: warehouseReducer(state.warehouse, action as WarehouseAction),    

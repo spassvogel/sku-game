@@ -6,6 +6,7 @@ import { Stage } from '@inlet/react-pixi';
 import IPad from 'components/ui/IPad';
 import StartButton from 'components/ui/StartButton';
 import { AppProvider } from 'components/context/AppProvider';
+import StatusText from 'components/ui/StatusText';
 window.PIXI = PIXI;
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
         />
         <IPad selectedProduct={selectedProduct}/>
         <StartButton />
+        <StatusText />
       </div>
     </AppProvider>
   );

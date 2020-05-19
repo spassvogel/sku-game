@@ -4,6 +4,7 @@ import { initialWarehouseState, WarehouseState } from "reducers/warehouseReducer
 import { GameState } from "reducers/gameStateReducer";
 
 export interface AppState {
+  statusText: string;
   gameState: GameState,
   wms: WMSData[];
   pickingLists: PickingList[];
@@ -12,6 +13,7 @@ export interface AppState {
 
 
 export const initialState: AppState = {
+  statusText: "",
   gameState: GameState.placingBoxes,
   wms: initialWMSState,
   pickingLists: generateInitialPickingLists(),

@@ -1,0 +1,9 @@
+.status {
+  width: 672px;
+  height: 60px;
+  position: absolute;
+  bottom: 0;
+  padding: 16px;
+  font-size: larger;
+  box-sizing: border-box;
+}

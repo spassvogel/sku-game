@@ -29,7 +29,7 @@ const PickingLists = () => {
   const renderContent = () => {
     return (
       data.map(pickingList => (
-        <div>
+        <div key={pickingList.orderNo}>
           {renderPickingList(pickingList)}
         </div>
       ))
@@ -50,7 +50,7 @@ const PickingLists = () => {
   }
 
   const renderProduct = (productCode: string) => (
-    <tr>
+    <tr key={productCode}>
       <td></td>
       <td>{productCode}</td>
       <td>{productNameMap[productCode]}</td>

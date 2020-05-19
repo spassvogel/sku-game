@@ -101,11 +101,14 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
 
     setTint(event.currentTarget, 0xFFFFFF);
 
-    const rackOrDockLocation = getRackAtLocation(location) || getDockAtLocation(location);
-    if (rackOrDockLocation) {
-      const otherBoxName = getBoxNameAtLocation(rackOrDockLocation);
+    const rackLocation = getRackAtLocation(location);
+    const dockLocation = getDockAtLocation(location);
+    const rackOrDockLoc = rackLocation || dockLocation;
+    if (rackOrDockLoc) {
+      const otherBoxName = getBoxNameAtLocation(rackOrDockLoc);
       if (!otherBoxName || otherBoxName === productCode) {
-        dispatch({ type: 'placeBox', productCode, location: rackOrDockLocation!});
+        const inRack = !!rackLocation;
+        dispatch({ type: 'placeBox', productCode, location: rackOrDockLoc!, inRack});
         return;
       }
     }

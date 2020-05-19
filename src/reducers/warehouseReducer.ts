@@ -1,6 +1,7 @@
 
 export interface BoxState {
   location: [number, number];
+  inRack?: boolean; // true if in a rack, false if in a dock
 }
 
 export interface WarehouseState {
@@ -37,25 +38,27 @@ export const initialWarehouseState: WarehouseState = {
 }
 
 export type WarehouseAction =
- | { type: 'placeBox'; productCode: string, location: [number, number] };
+ | { type: 'placeBox'; productCode: string, location: [number, number], inRack: boolean };
 
 export const warehouseReducer = (state: WarehouseState, action: WarehouseAction) => {
   switch (action.type) {
       case 'placeBox':
-          const boxes = { 
-              ...state.boxes,
-              [action.productCode]: {
-                  ...state.boxes[action.productCode],
-                  location: action.location
-              }
+        const { location, inRack } = action; 
+        const boxes = { 
+          ...state.boxes,
+          [action.productCode]: {
+              ...state.boxes[action.productCode],
+              location,
+              inRack
           }
-          return { 
-              ...state,
-              boxes
-          } ;
-      default: {
-          return state;
-      }
+        }
+        return { 
+          ...state,
+          boxes
+        } ;
+    default: {
+        return state;
+    }
   }
 }
 
