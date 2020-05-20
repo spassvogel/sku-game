@@ -2,6 +2,7 @@
 export interface PickingList {
   products: string[];
   pickedProducts?: string[]; // when a product from `product` is picked it appears in this list
+  guy?: number;               // who is currently picking this list
   complete?: boolean;        // when list is completely picked and the picker has returnwed with all the items 
   // clientName? 
   orderNo: string;
@@ -24,12 +25,23 @@ export const generateInitialPickingLists = (): PickingList[] => {
 }
 
 export type PickingListsAction =
+ | { type: 'startPicking', guy: number, orderNo: string }
  | { type: 'completeProductPick', productCode: string, orderNo: string }
  | { type: 'completeOrder', orderNo: string };
 
  
  export const pickingListsReducer = (state: PickingList[], action: PickingListsAction ) => {
   switch (action.type) {
+    case 'startPicking':
+      return state.map(pL => {
+        if (pL.orderNo === action.orderNo) {
+          return { 
+            ...pL,
+            guy: action.guy
+          }
+        }
+        return pL;
+      })
     case 'completeProductPick':
       return state.map(pL => {
         if (pL.orderNo === action.orderNo) {

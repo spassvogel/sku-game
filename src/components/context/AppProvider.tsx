@@ -15,7 +15,7 @@ const AppContext = createContext<{
 });
 
 
-type AnyAction = GameStateAction | WarehouseAction | StatusTextAction | PickingListsAction;
+export type AnyAction = GameStateAction | WarehouseAction | StatusTextAction | PickingListsAction;
 
 const reducer = (state: AppState, action: AnyAction) => {
   return {
@@ -24,6 +24,7 @@ const reducer = (state: AppState, action: AnyAction) => {
     wms: state.wms, // read only
     pickingLists: pickingListsReducer(state.pickingLists, action as PickingListsAction), // read only
     warehouse: warehouseReducer(state.warehouse, action as WarehouseAction),    
+    warehouseActions: state.warehouseActions
   };
 };
 

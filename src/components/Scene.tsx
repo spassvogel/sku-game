@@ -13,6 +13,7 @@ import Guy from "./pixi/Guy";
 import { GameState } from "reducers/gameStateReducer";
 import { PickingList } from "reducers/pickingListsReducer";
 import { AppState } from "appState";
+import WarehouseGuy from "./pixi/WarehouseGuy";
 
 PixiPlugin.registerPIXI(PIXI);
 gsap.registerPlugin(PixiPlugin);
@@ -36,9 +37,6 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
   const {tilemap, width, height, ...restProps} = props;
   const {state, dispatch} = useContext(AppContext);
   const {warehouse} = state;
-  const guyRef = useRef<PIXI.AnimatedSprite>(null);
-  const [carryBox, setCarryBox] = useState<boolean>(false);
-  const [guyLocation, setGuyLocation] = useState<[number, number]>([10, 12]);
 
   const [mapData, setMapData] = useState<TiledMapData>();
   const [rackLocations, setRackLocations] = useState<[number, number][]>([]);
@@ -62,15 +60,19 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
    * returns undefined */
   const getRackAtLocation = useCallback((location: [number, number]) => {
     // Racks are two tiles high but the box is placed at the top tile
-    return rackLocations.find((l) => (l[0] === location[0] && (l[1] === location[1] || l[1] === location[1] - 1)))
+    return rackLocations.find((l) => (l[0] === location[0] && (l[1] === location[1] || l[1] === location[1] + 1)))
   }, [rackLocations]);
 
   const getDockAtLocation = useCallback((location: [number, number]) => {
     return dockLocations.find((l) => (l[0] === location[0] && l[1] === location[1]))
   }, [dockLocations]);
 
-   // Converts pixel coordinate to scene location
-   const pointToSceneLocation = useCallback((point: PIXI.Point): [number, number] => {
+  const getProductLocation = (productCode: string) => {
+    return state.warehouse.boxes[productCode].location;
+  };
+  
+  // Converts pixel coordinate to scene location
+  const pointToSceneLocation = useCallback((point: PIXI.Point): [number, number] => {
     if (!mapData?.tilewidth || !mapData.tileheight) {
       return [0, 0];
     }
@@ -84,6 +86,7 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
   }
 
   const handleClick = (productCode: string, event: PIXI.interaction.InteractionEvent) => {
+    console.log(getProductLocation(productCode));
     props.onProductClick(productCode);
   }
 
@@ -188,166 +191,30 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
     });
   }, [mapData, locationIsBlocked, wallLocations]);
 
-  
-  const lastLocation = useRef<[number, number]>(guyLocation);
-  const [activePickingList, setActivePickingList] = useState<string>(); // orderNo
-  const [nextAction, setNextAction] = useState<WarehouseAction>();
-  const speed = 0.05; // time it takes to cross one tile
 
 
-  useEffect(() => {
-    // Picking boxes part begins
+  const renderGuys = () => {
     if(state.gameState === GameState.pickingBoxes) {
+
+      
+      console.log("let the picking begin");
       const nextPickingList = state.pickingLists.find(pL => !pL.complete);
-      if (nextPickingList && nextPickingList.orderNo !== activePickingList) {
-        console.log(`new active picking list ${nextPickingList.orderNo}`)
-        setActivePickingList(nextPickingList.orderNo);
-      }
+      if (!nextPickingList) return null;
+      if (!aStar) return null;
+      return (
+        <WarehouseGuy
+          pickingList={nextPickingList}  
+        //orderNo={nextPickingList.orderNo}
+          startLocation={[10, 12]}
+          tileSize={mapData!.tilewidth}
+          getProductLocation={getProductLocation}
+          dispatch={dispatch}
+          aStar={aStar}
+        /> 
+      )
     }
-  }, [activePickingList, state.gameState, state.pickingLists]);
-
-    // Will trigger when products have been picked or the active picking list changed
-  useEffect(() => {
-    if (activePickingList) {
-      console.log(`picking list is ${activePickingList}`)
-      const pickingList = state.pickingLists.find(pL => pL.orderNo === activePickingList)!; 
-      const findNextUnpickedProduct = () => {
-        return pickingList.products.find(p => (pickingList.pickedProducts || []).indexOf(p) === -1);
-      }
-      const { orderNo } = pickingList;
-      const productCode = findNextUnpickedProduct();
-  
-      const origin = lastLocation.current;
-  
-      if (productCode) {
-        // There is a product to be picked
-        setNextAction({ type: 'pick', origin, productCode, orderNo })
-      } else {
-        // Go back home
-        setNextAction({ type: 'return', origin, orderNo });
-      }  
-    }
-  }, [activePickingList, state.pickingLists]);
-
-  // useEffect(() => {
-  //   // Picking boxes part begins
-  //   if(state.gameState === GameState.pickingBoxes) {
-  //     // Start at the first picking list
-  //     setActivePickingList(state.pickingLists[0].orderNo);
-  //   }
-  // }, [state.gameState, state.pickingLists]);
-
-  //   // Will trigger when products have been picked or the active picking list changed
-  //   useEffect(() => {
-  //   if (activePickingList) {
-  //     const pickingList = state.pickingLists.find(pL => pL.orderNo === activePickingList)!; 
-  //     const findNextUnpickedProduct = () => {
-  //       return pickingList.products.find(p => (pickingList.pickedProducts || []).indexOf(p) === -1);
-  //     }
-  //     const { orderNo } = pickingList;
-  //     const productCode = findNextUnpickedProduct();
-  
-  //     const origin = lastLocation.current;
-  
-  //     if (productCode) {
-  //       // There is a product to be picked
-  //       setNextAction({ type: 'pick', origin, productCode, orderNo })
-  //     } else {
-  //       // Go back home
-  //       setNextAction({ type: 'return', origin, orderNo  });
-  //     }  
-  //   }
-  // }, [activePickingList, state.pickingLists]);
-
-  // useEffect(() => {
-  //   const nextPickingList = state.pickingLists.find(pL => !pL.complete);
-  //   if (nextPickingList) {
-  //     setActivePickingList(nextPickingList.orderNo);
-  //   }
-  // }, [state.pickingLists])
-
-  // processes next action
-  useEffect(() => {
-    if (nextAction) {
-      const convertLocation = (location: [number, number]) => {
-        // This is the format AStarFind works with
-        return { x: location[0], y: location[1] }
-      }
-      const getProductLocation = (productCode: string) => {
-        return state.warehouse.boxes[productCode].location;
-      };
-      const guy = guyRef.current;
-      const tl = gsap.timeline();
-
-      const { origin } = nextAction;
-      if (!origin) return; 
-      const startLocation = convertLocation(origin); // absolute start location 
-      switch (nextAction.type) {
-        case 'pick': {
-          const { productCode, orderNo } = nextAction;
-
-          // Next is just for picking. Need a different subroutine for returning
-          console.log(`We need to pick ${productCode} (${orderNo}). It's location is ${getProductLocation(productCode)}. We start at ${origin}`);
-              
-          // Determine the path to this product
-          const path = aStar?.findPath(startLocation, convertLocation(getProductLocation(productCode))) || [];
-          
-          // create animation to walk this path
-          path.forEach((position: number[]) => {
-            tl.to(guy, {
-              ease: Linear.easeNone,
-              pixi: { 
-                x: position[0] * mapData!.tilewidth,
-                y: position[1] * mapData!.tileheight
-              }, 
-              duration: speed
-            });
-          }); 
-          tl.to(guy, {
-            onComplete: () => { 
-              // completed picking product
-              setCarryBox(true);
-              dispatch({ type: 'completeProductPick', productCode, orderNo});
-              console.log(`completed picking ${productCode} (${orderNo})`)
-              const endLocation = path[path.length - 1];
-              lastLocation.current = endLocation as [number, number];
-              //setGuyLocation(endLocation as [number, number]);
-            },
-          })
-        }
-        break;
-        case 'return': {
-          const { orderNo } = nextAction;
-          // Next is just for picking. Need a different subroutine for returning
-          console.log(`Return to base. We start at ${origin} (${orderNo})`);
-              
-          // Determine the path to this product
-          const path = aStar?.findPath(startLocation, convertLocation([10, 12])) || [];
-          
-          // create animation to walk this path
-          path.forEach((position: number[]) => {
-            tl.to(guy, {
-              ease: Linear.easeNone,
-              pixi: { 
-                x: position[0] * mapData!.tilewidth,
-                y: position[1] * mapData!.tileheight
-              }, 
-              duration: speed
-            });
-          }); 
-          tl.to(guy, {
-            onComplete: () => { 
-              // completed picking product
-              setCarryBox(false);
-              const endLocation = path[path.length - 1];
-              lastLocation.current = endLocation as [number, number];
-              dispatch({ type: 'completeOrder', orderNo });
-            },
-          })
-        }
-      }
-    }
-  }, [aStar, dispatch, mapData, nextAction, state.warehouse.boxes]);
+    return null;
+  }
 
   return (
     <Stage width={width} height={height}>
@@ -368,13 +235,14 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
               setWallLocations={setWallLocations}
             />
             { renderBoxes() }
-            <Guy 
+            { renderGuys() }
+            {/* <Guy 
               atlas={`${process.env.PUBLIC_URL}/images/sprites/guy/guy.json`} 
               carryBox={carryBox}
               x={guyLocation[0] * mapData.tilewidth} 
               y={guyLocation[1] * mapData.tileheight} 
               ref={guyRef}
-            />
+            /> */}
           </>
         )}
       </Container>

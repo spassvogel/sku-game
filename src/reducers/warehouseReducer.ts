@@ -46,22 +46,22 @@ export const initialWarehouseState: WarehouseState = {
       // playstation: { location: [3, 1], product: 'playstation' },
 
       "IRN 590": { location: [3, 6], inRack: true },
-      "CAM 679": { location: [3, 8], inRack: true },
+      "CAM 679": { location: [3, 9], inRack: true },
 
       "PTV 555": { location: [4, 6], inRack: true },
-      "SPK 876": { location: [4, 8], inRack: true },
+      "SPK 876": { location: [4, 9], inRack: true },
 
       "MWO 901": { location: [5, 6], inRack: true },
-      "OTV 482": { location: [5, 8], inRack: true },
+      "OTV 482": { location: [5, 9], inRack: true },
 
       "MIC 099": { location: [6, 6], inRack: true },
-      "WSH 322": { location: [6, 8], inRack: true },
+      "WSH 322": { location: [6, 9], inRack: true },
 
       "RFG 411": { location: [7, 6], inRack: true },
-      "SMX 041": { location: [7, 8], inRack: true },
+      "SMX 041": { location: [7, 9], inRack: true },
 
       "DSC 743": { location: [8, 6], inRack: true },
-      "TPH 255": { location: [8, 8], inRack: true },
+      "TPH 255": { location: [8, 9], inRack: true },
   }
 }
 

@@ -25,6 +25,7 @@ const Box = (props: Props & React.ComponentProps<typeof Container>) => {
     location = [0, 0],
     tileWidth = 0, 
     tileHeight = 0,
+    behindWall
   } = props;
   const ref = useRef<PIXI.Container>(null);
   const imgRef = useRef<PIXI.Sprite>(null);
@@ -101,13 +102,13 @@ const Box = (props: Props & React.ComponentProps<typeof Container>) => {
         graphics.endFill();
       }} /> */}
       <Sprite 
-        anchor={[0, -0.5]}
+        anchor={behindWall ? [0, -0.5] : [0, 0.5]}
         image={img}
         ref={imgRef}
       />        
       <Sprite 
         name="ghost"
-        anchor={[0, -0.5]}
+        anchor={behindWall ? [0, -0.5] : [0, 0.5]}
         alpha={0.9}
         image={`${process.env.PUBLIC_URL}/images/box1.png`}
         ref={dragRef}

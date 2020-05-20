@@ -14,7 +14,7 @@ interface Props {
   setWallLocations: (tiles: [number, number][]) => void;
 }
 
-const DEBUG = false;
+const DEBUG = true;
 
 const Tilemap = (props: Props) => {
   const {basePath, data, setRackLocations, setDockLocations, setWallLocations} = props;

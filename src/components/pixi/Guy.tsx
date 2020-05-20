@@ -1,7 +1,6 @@
-import React, { useState, useEffect, forwardRef, useRef, memo } from 'react';
-import { Sprite, AnimatedSprite, useApp, useTick, Container } from "@inlet/react-pixi";
+import React, { useState, useEffect, forwardRef, useRef } from 'react';
+import { useApp, useTick, Container } from "@inlet/react-pixi";
 import * as PIXI from 'pixi.js';
-import { isMainThread } from 'worker_threads';
 import SpriteAnimated from './SpriteAnimated';
 
 export enum Orientation {
@@ -55,15 +54,6 @@ const Guy = forwardRef<PIXI.Container, any>((props: Props & React.ComponentProps
     }
     lastPositionPoint.current = currentPosition.clone();
   });
-
-  // const setOrientation = (newOrientation: Orientation) => {
-  //   if (orientation.current !== newOrientation) {
-  //     console.log(frames![newOrientation]);
-  //     (ref as any).current.textures = frames![newOrientation];
-  //     ((ref as any).current as PIXI.AnimatedSprite).gotoAndPlay(0);
-  //   }
-  //   orientation.current = newOrientation;
-  // }
 
   useEffect(() => {
     app.loader.add(atlas).load((_, resource) => {

@@ -1,6 +1,6 @@
 import { initialWMSState, WMSData } from "reducers/wmsReducer";
 import { generateInitialPickingLists, PickingList } from "reducers/pickingListsReducer";
-import { initialWarehouseState, WarehouseState } from "reducers/warehouseReducer";
+import { initialWarehouseState, WarehouseState, WarehouseAction } from "reducers/warehouseReducer";
 import { GameState } from "reducers/gameStateReducer";
 
 export interface AppState {
@@ -9,6 +9,7 @@ export interface AppState {
   wms: WMSData[];
   pickingLists: PickingList[];
   warehouse: WarehouseState; // Where all the boxes are in the warehouse
+  warehouseActions: WarehouseAction[]
 }
 
 
@@ -18,5 +19,6 @@ export const initialState: AppState = {
   wms: initialWMSState,
   pickingLists: generateInitialPickingLists(),
   warehouse: initialWarehouseState,
+  warehouseActions: []
 }
 
