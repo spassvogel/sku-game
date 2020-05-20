@@ -8,11 +8,8 @@ import { AppContext } from "./context/AppProvider";
 import * as PIXI from 'pixi.js';
 import Box from "./pixi/Box";
 import { PixiPlugin } from 'gsap/all';
-import { gsap, Linear } from 'gsap'
-import Guy from "./pixi/Guy";
+import { gsap } from 'gsap'
 import { GameState } from "reducers/gameStateReducer";
-import { PickingList } from "reducers/pickingListsReducer";
-import { AppState } from "appState";
 import WarehouseGuy from "./pixi/WarehouseGuy";
 
 PixiPlugin.registerPIXI(PIXI);
@@ -28,10 +25,6 @@ export interface Props {
   height: number;
   onProductClick: (productCode: string) => void;
 }
-
-type WarehouseAction =
-  { type: 'pick', origin: [number, number], productCode: string, orderNo: string }
-| { type: 'return', origin: [number, number], orderNo: string };
 
 const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
   const {tilemap, width, height, ...restProps} = props;
@@ -60,7 +53,8 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
    * returns undefined */
   const getRackAtLocation = useCallback((location: [number, number]) => {
     // Racks are two tiles high but the box is placed at the top tile
-    return rackLocations.find((l) => (l[0] === location[0] && (l[1] === location[1] || l[1] === location[1] + 1)))
+    // return rackLocations.find((l) => (l[0] === location[0] && (l[1] === location[1] || l[1] === location[1] + 1)))
+    return rackLocations.find((l) => (l[0] === location[0] && l[1] === location[1]))
   }, [rackLocations]);
 
   const getDockAtLocation = useCallback((location: [number, number]) => {
@@ -159,8 +153,6 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
     ));
   }
 
-  /** Picking logic! */
-
   /** Returns true if the tile is blocked */
   const locationIsBlocked = useCallback((location: [number, number]) => {
     return wallLocations.some((l) => l[0] === location[0] && l[1] === location[1]);
@@ -192,19 +184,14 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
   }, [mapData, locationIsBlocked, wallLocations]);
 
 
-
   const renderGuys = () => {
-    if(state.gameState === GameState.pickingBoxes) {
-
-      
-      console.log("let the picking begin");
+    if(state.gameState === GameState.pickingBoxes) {      
       const nextPickingList = state.pickingLists.find(pL => !pL.complete);
       if (!nextPickingList) return null;
       if (!aStar) return null;
       return (
         <WarehouseGuy
           pickingList={nextPickingList}  
-        //orderNo={nextPickingList.orderNo}
           startLocation={[10, 12]}
           tileSize={mapData!.tilewidth}
           getProductLocation={getProductLocation}

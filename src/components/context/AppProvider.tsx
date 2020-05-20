@@ -22,9 +22,8 @@ const reducer = (state: AppState, action: AnyAction) => {
     gameState: gameStateReducer(state.gameState, action as GameStateAction),
     statusText: statusTextReducer(state.statusText, action as StatusTextAction),
     wms: state.wms, // read only
-    pickingLists: pickingListsReducer(state.pickingLists, action as PickingListsAction), // read only
+    pickingLists: pickingListsReducer(state.pickingLists, action as PickingListsAction), 
     warehouse: warehouseReducer(state.warehouse, action as WarehouseAction),    
-    warehouseActions: state.warehouseActions
   };
 };
 

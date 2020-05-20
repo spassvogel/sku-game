@@ -1,28 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.3.4" orientation="orthogonal" renderorder="right-down" width="21" height="13" tilewidth="32" tileheight="32" infinite="0" nextlayerid="12" nextobjectid="2">
+<map version="1.2" tiledversion="1.3.4" orientation="orthogonal" renderorder="right-down" width="21" height="13" tilewidth="32" tileheight="32" infinite="0" nextlayerid="13" nextobjectid="3">
  <editorsettings>
   <export target="level1.json" format="json"/>
  </editorsettings>
  <tileset firstgid="1" name="sku-tiles" tilewidth="32" tileheight="32" tilecount="36" columns="9">
   <image source="tilesets/sku-tiles.png" width="288" height="128"/>
-  <tile id="4">
-   <properties>
-    <property name="rack" type="bool" value="true"/>
-   </properties>
-  </tile>
   <tile id="6">
    <properties>
-    <property name="dock" type="bool" value="true"/>
+    <property name="dock" type="bool" value="false"/>
    </properties>
   </tile>
   <tile id="7">
    <properties>
-    <property name="dock" type="bool" value="true"/>
+    <property name="dock" type="bool" value="false"/>
    </properties>
   </tile>
   <tile id="8">
    <properties>
-    <property name="dock" type="bool" value="true"/>
+    <property name="dock" type="bool" value="false"/>
    </properties>
   </tile>
   <tile id="15">
@@ -38,6 +33,21 @@
   <tile id="17">
    <properties>
     <property name="dock" type="bool" value="false"/>
+   </properties>
+  </tile>
+  <tile id="31">
+   <properties>
+    <property name="rack" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="32">
+   <properties>
+    <property name="rack" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="33">
+   <properties>
+    <property name="dock" type="bool" value="true"/>
    </properties>
   </tile>
  </tileset>
@@ -95,25 +105,21 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="11" name="Object Layer 2">
-  <object id="1" gid="32" x="161.547" y="223.607" width="32" height="32">
-   <properties>
-    <property name="test" type="bool" value="false"/>
-   </properties>
-  </object>
- </objectgroup>
- <layer id="8" name="BottomDockZone" width="21" height="13">
+ <layer id="12" name="RackPlaceholders" width="21" height="13" visible="0">
+  <properties>
+   <property name="placeholders" type="bool" value="true"/>
+  </properties>
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,7,8,8,8,8,8,8,8,8,8,8,8,8,9,0,0,0,0,0,
-0,0,16,17,17,17,17,17,17,17,17,17,17,17,17,18,0,0,0,0,0,
+0,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,33,33,33,33,33,33,33,0,33,33,33,33,33,33,33,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,32,32,32,32,32,32,32,0,32,32,32,32,32,32,32,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
@@ -121,8 +127,8 @@
  </layer>
  <layer id="7" name="TopDockZone" width="21" height="13">
   <data encoding="csv">
-0,0,7,8,8,8,8,8,8,8,8,8,8,8,8,9,0,0,0,0,0,
-0,0,16,17,17,17,17,17,17,17,17,17,17,17,17,18,0,0,0,0,0,
+0,7,7,8,8,8,8,8,8,8,8,8,8,8,8,9,9,9,9,9,0,
+0,16,16,17,17,17,17,17,17,17,17,17,17,17,17,18,18,18,18,18,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

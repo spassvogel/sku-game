@@ -14,7 +14,7 @@ interface Props {
   setWallLocations: (tiles: [number, number][]) => void;
 }
 
-const DEBUG = true;
+const DEBUG = false;
 
 const Tilemap = (props: Props) => {
   const {basePath, data, setRackLocations, setDockLocations, setWallLocations} = props;
@@ -34,23 +34,8 @@ const Tilemap = (props: Props) => {
       // Rack tiles are marked on the tileset with property 'rack'
       const rackTileIds = tileset.tiles?.filter(tile => tile.properties?.some(p => p.name === 'rack' && p.value)).map(t => t.id);
       const dockTileIds = tileset.tiles?.filter(tile => tile.properties?.some(p => p.name === 'dock' && p.value)).map(t => t.id);
-      const rackLocations: [number, number][] = [];
-      const dockLocations: [number, number][] = [];
       const layers = data.layers.filter(layer => layer.visible).map(layer => {
-        layer.data.forEach((id, index) => {
-          if(rackTileIds && rackTileIds.some(rtId => rtId === id - tileset.firstgid)){
-            const x = (index % layer.width);
-            const y = Math.floor(index / layer.width);
-            rackLocations.push([x, y]);  
-          }
 
-          if(dockTileIds && dockTileIds.some(rtId => rtId === id - tileset.firstgid)){
-            const x = (index % layer.width);
-            const y = Math.floor(index / layer.width);
-            dockLocations.push([x, y]);  
-          }
-        })
- 
         // walls are marked on the layer with property 'wall'
         if (layer.properties && layer.properties.some(p => p.name === 'wall' && p.value === true)){
           addAllTilesInLayerToList(wallLocations, layer, layer.width);
@@ -58,8 +43,30 @@ const Tilemap = (props: Props) => {
         
         return createTileLayer(layer, texture, data.width, tileset, spritesheet);
       });
-      setRackLocations(rackLocations);
-      setDockLocations(dockLocations);
+
+      // The racks are placed in a special layer with property 'racks'
+      const placeholderLayer = data.layers.find(layer => layer.properties?.some(p => p.name === 'placeholders' && p.value));
+      if (placeholderLayer) {
+        const rackLocations: [number, number][] = [];
+        const dockLocations: [number, number][] = [];
+
+        placeholderLayer.data.forEach((id, index) => {         
+          if(rackTileIds && rackTileIds.some(rtId => rtId === id - tileset.firstgid)){
+            const x = (index % placeholderLayer.width);
+            const y = Math.floor(index / placeholderLayer.width);
+            rackLocations.push([x, y]);  
+          }
+          if(dockTileIds && dockTileIds.some(rtId => rtId === id - tileset.firstgid)){
+            const x = (index % placeholderLayer.width);
+            const y = Math.floor(index / placeholderLayer.width);
+            dockLocations.push([x, y]);  
+          }
+
+          setRackLocations(rackLocations);
+          setDockLocations(dockLocations);
+
+        });
+      }
       setWallLocations(wallLocations);
       setLayers(layers);
       
