@@ -12,7 +12,7 @@ export const generateInitialPickingLists = (): PickingList[] => {
   // the actual products are not random, but the rest of the data is
   const productPickingList = [
     ["MIC 099", "MWO 901", "DSC 743"],
-    ["WSH 322", "MWO 901"],
+    ["WSH 322"],
     ["SMX 041", "OTV 482", "CAM 679"]
   ];
 
@@ -30,7 +30,7 @@ export type PickingListsAction =
  | { type: 'completeOrder', orderNo: string };
 
  
- export const pickingListsReducer = (state: PickingList[], action: PickingListsAction ) => {
+export const pickingListsReducer = (state: PickingList[], action: PickingListsAction ) => {
   switch (action.type) {
     case 'startPicking':
       return state.map(pL => {

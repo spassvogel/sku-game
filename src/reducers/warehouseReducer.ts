@@ -1,3 +1,4 @@
+import { initialWMSState } from "./wmsReducer";
 
 export interface BoxState {
   location: [number, number];
@@ -7,63 +8,59 @@ export interface BoxState {
 export interface WarehouseState {
   boxes: { [id: string]: BoxState }
 }
-const inRack = true; // for debugging
-export const initialWarehouseState2: WarehouseState = {
-  boxes: {
-      // hairdryer: { location: [4, 8], product: 'hairdryer' },
-      // toothbrush: { location: [5, 8], product: 'toothbrush' },
-      // microwave: { location: [3, 6], product: 'microwave' },
 
-      // microphone: { location: [3, 0], product: 'microphone' },
-      // playstation: { location: [3, 1], product: 'playstation' },
-
-      "IRN 590": { location: [3, 0], inRack },
-      "CAM 679": { location: [3, 1], inRack },
-
-      "PTV 555": { location: [4, 0], inRack },
-      "SPK 876": { location: [4, 1], inRack },
-
-      "MWO 901": { location: [5, 0], inRack },
-      "OTV 482": { location: [5, 1], inRack },
-
-      "MIC 099": { location: [6, 0], inRack },
-      "WSH 322": { location: [6, 1], inRack },
-
-      "RFG 411": { location: [7, 0], inRack },
-      "SMX 041": { location: [7, 1], inRack },
-
-      "DSC 743": { location: [8, 0], inRack },
-      "TPH 255": { location: [8, 1], inRack },
-  }
+const generateBoxLocationsAtDock = () => {
+  const products = initialWMSState.map(p => p.productCode);
+  products.sort(() => (0.5 - Math.random()));
+  return products.reduce((acc: { [id: string]: BoxState }, value: string, index: number) => {
+    acc[value] = { 
+      location: [1 + index, 1]
+    }
+    return acc;
+  }, {});
 }
+
+// Use this for debugging. It shows a warehouse where all the boxes are placed
+const generateBoxLocationsAtRacks = () => {
+  const products = initialWMSState.map(p => p.productCode);
+  products.sort(() => (0.5 - Math.random()));
+  const rackLocations: [number, number][] = [
+    [3, 9],
+    [4, 9],
+    [5, 9],
+    [6, 9],
+    [7, 9],
+    [8, 9],
+    [9, 9],
+    [11, 9],
+    [12, 9],
+    [13, 9],
+    [14, 9],
+    [15, 9],
+    [16, 9],
+    [17, 9],
+    [3, 6],
+    [4, 6],
+    [5, 6],
+    [6, 6],
+    [7, 6],
+    [8, 6],
+  ];
+
+  return products.reduce((acc: { [id: string]: BoxState }, value: string, index: number) => {
+    acc[value] = { 
+      location: rackLocations[index],
+      inRack: true
+    }
+    return acc;
+  }, {});
+}
+
 export const initialWarehouseState: WarehouseState = {
-  boxes: {
-      // hairdryer: { location: [4, 8], product: 'hairdryer' },
-      // toothbrush: { location: [5, 8], product: 'toothbrush' },
-      // microwave: { location: [3, 6], product: 'microwave' },
-
-      // microphone: { location: [3, 0], product: 'microphone' },
-      // playstation: { location: [3, 1], product: 'playstation' },
-
-      "IRN 590": { location: [3, 6], inRack: true },
-      "CAM 679": { location: [3, 9], inRack: true },
-
-      "PTV 555": { location: [4, 6], inRack: true },
-      "SPK 876": { location: [4, 9], inRack: true },
-
-      "MWO 901": { location: [5, 6], inRack: true },
-      "OTV 482": { location: [5, 9], inRack: true },
-
-      "MIC 099": { location: [6, 6], inRack: true },
-      "WSH 322": { location: [6, 9], inRack: true },
-
-      "RFG 411": { location: [7, 6], inRack: true },
-      "SMX 041": { location: [7, 9], inRack: true },
-
-      "DSC 743": { location: [8, 6], inRack: true },
-      "TPH 255": { location: [8, 9], inRack: true },
-  }
+  // boxes: generateBoxLocationsAtDock()
+  boxes: generateBoxLocationsAtRacks()
 }
+
 
 export type WarehouseAction =
  | { type: 'placeBox'; productCode: string, location: [number, number], inRack: boolean };

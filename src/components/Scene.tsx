@@ -80,7 +80,6 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
   }
 
   const handleClick = (productCode: string, event: PIXI.interaction.InteractionEvent) => {
-    console.log(getProductLocation(productCode));
     props.onProductClick(productCode);
   }
 

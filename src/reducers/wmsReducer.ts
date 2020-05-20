@@ -23,6 +23,30 @@ export const initialWMSState = [{
   productCode: "CAM 679",
   description: "Digital Camera",
 }, {
+  category: Categories.A,
+  productCode: "BAM 223",
+  description: "Baby monitor",
+}, {
+  category: Categories.A,
+  productCode: "SMK 019",
+  description: "Smoke detector",
+}, {
+  category: Categories.A,
+  productCode: "DLA 413",
+  description: "Desk lamp",
+}, {
+  category: Categories.A,
+  productCode: "VAC 082",
+  description: "Vacuum cleaner",
+}, {
+  category: Categories.A,
+  productCode: "Battery charger",
+  description: "BAT 917",
+}, {
+  category: Categories.B,
+  productCode: "VIR 555",
+  description: "Virtual Reality headset",
+}, {
   category: Categories.B,
   productCode: "PTV 555",
   description: "Plasma TV Set",
