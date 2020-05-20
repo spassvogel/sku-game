@@ -110,6 +110,7 @@ const WarehouseGuy = (props: Props & React.ComponentProps<typeof Guy>) => {
         onComplete: () => { 
           // completed picking product
           setCarryBox(false);
+          lastLocation.current = startLocation;
           dispatch({ type: 'completeOrder', orderNo });
         },
       })
