@@ -2,6 +2,7 @@
 export interface PickingList {
   products: string[];
   pickedProducts?: string[]; // when a product from `product` is picked it appears in this list
+  complete?: boolean;        // when list is completely picked and the picker has returnwed with all the items 
   // clientName? 
   orderNo: string;
 }
@@ -23,7 +24,8 @@ export const generateInitialPickingLists = (): PickingList[] => {
 }
 
 export type PickingListsAction =
- | { type: 'completeProductPick', productCode: string, orderNo: string };
+ | { type: 'completeProductPick', productCode: string, orderNo: string }
+ | { type: 'completeOrder', orderNo: string };
 
  
  export const pickingListsReducer = (state: PickingList[], action: PickingListsAction ) => {
@@ -41,6 +43,16 @@ export type PickingListsAction =
         }
         return pL;
       })
+    case 'completeOrder':
+      return state.map(pL => {
+        if (pL.orderNo === action.orderNo) {
+          return { 
+            ...pL,
+            complete: true
+          }
+        }
+        return pL;
+      });
     default:
       return state;
   }

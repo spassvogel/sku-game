@@ -83,7 +83,6 @@ const Guy = forwardRef<PIXI.Container, any>((props: Props & React.ComponentProps
       setFrames(indexedTextures);
     });
   }, [app.loader, atlas]);
-console.log('rendering guy')
   if (!frames) return null;
   const animationFrames = frames[`${orientation}${carryBox ? '-box': ''}`];
   return (
