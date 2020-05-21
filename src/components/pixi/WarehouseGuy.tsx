@@ -7,6 +7,7 @@ import { AStarFinder } from 'astar-typescript';
 import { PickingList } from 'reducers/pickingListsReducer';
 import { gsap, Linear } from 'gsap'
 import { PixiPlugin } from 'gsap/all';
+import { SPEED_MULTIPLIER } from 'constants/gameSettings';
 
 PixiPlugin.registerPIXI(PIXI);
 gsap.registerPlugin(PixiPlugin);
@@ -24,8 +25,6 @@ const convertLocation = (location: [number, number]) => {
   // This is the format AStarFind works with
   return { x: location[0], y: location[1] }
 }
-
-const speed = 0.15;
 //
 const WarehouseGuy = (props: Props & React.ComponentProps<typeof Guy>) => {
   const {
@@ -73,7 +72,7 @@ const WarehouseGuy = (props: Props & React.ComponentProps<typeof Guy>) => {
             x: loc[0] * tileSize,
             y: loc[1] * tileSize
           }, 
-          duration: speed
+          duration: 1 / SPEED_MULTIPLIER  // it takes one second real time to walk one tile
         });
       }); 
       tl.to(guyRef.current, {
@@ -84,7 +83,6 @@ const WarehouseGuy = (props: Props & React.ComponentProps<typeof Guy>) => {
           console.log(`completed picking ${productCode} (${orderNo})`)
           const endLocation = path[path.length - 1];
           lastLocation.current = endLocation as [number, number];
-          //setGuyLocation(endLocation as [number, number]);
         },
       })
     } 
@@ -103,7 +101,7 @@ const WarehouseGuy = (props: Props & React.ComponentProps<typeof Guy>) => {
             x: loc[0] * tileSize,
             y: loc[1] * tileSize
           }, 
-          duration: speed
+          duration: 1 / SPEED_MULTIPLIER
         });
       }); 
       tl.to(guyRef.current, {

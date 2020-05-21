@@ -11,6 +11,7 @@ import { PixiPlugin } from 'gsap/all';
 import { gsap } from 'gsap'
 import { GameState } from "reducers/gameStateReducer";
 import WarehouseGuy from "./pixi/WarehouseGuy";
+import sound from 'pixi-sound';
 
 PixiPlugin.registerPIXI(PIXI);
 gsap.registerPlugin(PixiPlugin);
@@ -47,6 +48,16 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
   }, [jsonPath]);
 
   const basePath = jsonPath.substr(0, jsonPath.lastIndexOf('/'));
+
+  useEffect(() => {
+    sound.add('bennyHill', `${process.env.PUBLIC_URL}/sound/BennyHill.mp3`);    
+  }, []);
+
+  useEffect(() => {
+    if (state.gameState === GameState.pickingBoxes) {
+      sound.play('bennyHill'); 
+    }
+  }, [state.gameState])
 
   /** Returns the location of the rack at given location 
    *  The tile south of a rack counts too. When no rack is found
@@ -188,6 +199,7 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
       const nextPickingList = state.pickingLists.find(pL => !pL.complete);
       if (!nextPickingList) return null;
       if (!aStar) return null;
+
       return (
         <WarehouseGuy
           pickingList={nextPickingList}  
