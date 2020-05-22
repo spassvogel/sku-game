@@ -1,4 +1,4 @@
-import React, { useRef,  useMemo, useState } from 'react';
+import React, { useRef,  useMemo } from 'react';
 import { Sprite, Graphics, Container } from '@inlet/react-pixi';
 import * as PIXI from 'pixi.js';
 import { PixiPlugin } from 'gsap/all';
@@ -94,15 +94,6 @@ const Box = (props: Props & React.ComponentProps<typeof Container>) => {
       mousemove={onDragMove}
       touchmove={onDragMove}
     >
-      {/* <Graphics draw={(graphics:PIXI.Graphics) => {
-        const line = 2;
-//         const blocked = blockedTiles.some((loc) => loc[0] === location[0] && loc[1] === location[1]);
-        // const color = blocked ? 0xFF3300 : 0x00FF00;
-        const color = 0xFF3300;
-        graphics.lineStyle(line, color);
-        graphics.drawRect(line / 2, line / 2, tileWidth - line / 2, tileHeight - line / 2);
-        graphics.endFill();
-      }} /> */}
       {selected && (<Graphics draw={(graphics:PIXI.Graphics) => {
           const line = 2;
           const color = 0xffcc00;
