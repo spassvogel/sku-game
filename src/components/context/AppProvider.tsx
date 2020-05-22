@@ -4,6 +4,7 @@ import { gameStateReducer, GameStateAction } from 'reducers/gameStateReducer';
 import { warehouseReducer, WarehouseAction } from 'reducers/warehouseReducer';
 import { statusTextReducer, StatusTextAction } from 'reducers/statusTextReducer';
 import { PickingListsAction, pickingListsReducer } from 'reducers/pickingListsReducer';
+import { mutedReducer, MutedReducerAction } from 'reducers/mutedReducer';
 
 
 const AppContext = createContext<{
@@ -15,7 +16,7 @@ const AppContext = createContext<{
 });
 
 
-export type AnyAction = GameStateAction | WarehouseAction | StatusTextAction | PickingListsAction;
+export type AnyAction = GameStateAction | WarehouseAction | StatusTextAction | PickingListsAction | MutedReducerAction;
 
 const reducer = (state: AppState, action: AnyAction) => {
   return {
@@ -23,7 +24,8 @@ const reducer = (state: AppState, action: AnyAction) => {
     statusText: statusTextReducer(state.statusText, action as StatusTextAction),
     wms: state.wms, // read only
     pickingLists: pickingListsReducer(state.pickingLists, action as PickingListsAction), 
-    warehouse: warehouseReducer(state.warehouse, action as WarehouseAction),    
+    warehouse: warehouseReducer(state.warehouse, action as WarehouseAction),
+    muted: mutedReducer(state.muted, action as MutedReducerAction), // todo: settingsreducer?
   };
 };
 

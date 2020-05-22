@@ -9,6 +9,7 @@ export interface AppState {
   wms: WMSData[];
   pickingLists: PickingList[];
   warehouse: WarehouseState; // Where all the boxes are in the warehouse
+  muted: boolean;
 }
 
 
@@ -18,5 +19,6 @@ export const initialState: AppState = {
   wms: initialWMSState,
   pickingLists: generateInitialPickingLists(),
   warehouse: initialWarehouseState,
+  muted: localStorage.getItem('muted') === 'true',
 }
 

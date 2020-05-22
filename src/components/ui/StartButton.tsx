@@ -5,7 +5,6 @@ import { GameState } from "reducers/gameStateReducer";
 
 const StartButton = () => {
   const { state, dispatch } = useContext(AppContext);
-  const text = state.gameState;
 
   const handleClick = () => {
     switch (state.gameState) {

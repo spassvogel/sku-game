@@ -55,10 +55,12 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
   }, []);
 
   useEffect(() => {
-    if (state.gameState === GameState.pickingBoxes) {
+    if (state.gameState === GameState.pickingBoxes && !state.muted) {
       sound.play('bennyHill'); 
+    } else {
+      sound.stop('bennyHill');
     }
-  }, [state.gameState])
+  }, [state.gameState, state.muted])
 
   /** Returns the location of the rack at given location 
    *  The tile south of a rack counts too. When no rack is found

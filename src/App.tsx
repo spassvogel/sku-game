@@ -7,6 +7,7 @@ import IPad from 'components/ui/IPad';
 import StartButton from 'components/ui/StartButton';
 import { AppProvider } from 'components/context/AppProvider';
 import StatusText from 'components/ui/StatusText';
+import Settings from 'components/ui/Settings';
 window.PIXI = PIXI;
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
   return (
     <AppProvider>
       <div className="App">
+        <Settings />
         <Scene 
           tilemap="scenes/level1.json" 
           width={width} 
