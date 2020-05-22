@@ -12,6 +12,7 @@ import { gsap } from 'gsap'
 import { GameState } from "reducers/gameStateReducer";
 import WarehouseGuy from "./pixi/WarehouseGuy";
 import sound from 'pixi-sound';
+import { PickingList } from "reducers/pickingListsReducer";
 
 PixiPlugin.registerPIXI(PIXI);
 gsap.registerPlugin(PixiPlugin);
@@ -193,15 +194,25 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
     });
   }, [mapData, locationIsBlocked, wallLocations]);
 
+  const [pickingList, setPickingList] = useState<PickingList>();
+
+  useEffect(() => {
+    if (state.gameState === GameState.pickingBoxes) {
+      const nextPickingList = state.pickingLists.find(pL => !pL.complete);
+      setPickingList(nextPickingList);
+      if (!nextPickingList) {
+        dispatch({ type: 'completeGame' });
+      }
+    }
+  }, [dispatch, state.gameState, state.pickingLists]);
+  
 
   const renderGuys = () => {
-    const nextPickingList = state.pickingLists.find(pL => !pL.complete);
-    if (!nextPickingList) return null;
     if (!aStar) return null;
 
     return (
       <WarehouseGuy
-        pickingList={nextPickingList}  
+        pickingList={pickingList}  
         startLocation={[10, 12]}
         tileSize={mapData!.tilewidth}
         getProductLocation={getProductLocation}

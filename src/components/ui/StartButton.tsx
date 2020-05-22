@@ -1,23 +1,38 @@
 import React, { useContext } from "react";
 import { AppContext } from "components/context/AppProvider";
 import './startButton.css';
+import { GameState } from "reducers/gameStateReducer";
 
 const StartButton = () => {
   const { state, dispatch } = useContext(AppContext);
   const text = state.gameState;
 
   const handleClick = () => {
-    const allBoxedPlaced = !Object.values(state.warehouse.boxes).some(b => !b.inRack);
-    if(!allBoxedPlaced) {
-      dispatch({ type: 'setStatusText', text: "First place all goods in the warehouse!"});
-      return;
+    switch (state.gameState) {
+      case GameState.placingBoxes:
+        const allBoxedPlaced = !Object.values(state.warehouse.boxes).some(b => !b.inRack);
+        if(!allBoxedPlaced) {
+          dispatch({ type: 'setStatusText', text: "First place all goods in the warehouse!"});
+          return;
+        }
+        dispatch({ type: 'startPicking'});
+    
+        break;
+      case GameState.complete:
+        // eslint-disable-next-line no-restricted-globals
+        location.reload();
+        break;
     }
-    dispatch({ type: 'startPicking'});
   };
 
-  return (
-    <button onClick={handleClick} className="start-button"><h1>Start</h1></button>
-  );
+  switch (state.gameState) {
+    case GameState.placingBoxes:
+      return <button onClick={handleClick} className="start-button"><h1>Start</h1></button>;
+    case GameState.complete:
+      return <button onClick={handleClick} className="start-button"><h1>Restart</h1></button>;
+    default:
+      return null;
+  }
 }
 
 export default StartButton;
