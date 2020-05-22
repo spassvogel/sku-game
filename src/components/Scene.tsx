@@ -183,13 +183,13 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
         matrix.push(row);
     }
     return new AStarFinder({
-        grid: {
-            matrix
-        },
-        diagonalAllowed: false,
-        includeStartNode: false,
-        heuristic: "Manhatten",
-        weight: 0,
+      grid: {
+          matrix
+      },
+      diagonalAllowed: false,
+      includeStartNode: false,
+      heuristic: "Manhatten",
+      weight: 0,
     });
   }, [mapData, locationIsBlocked, wallLocations]);
 
@@ -230,15 +230,8 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
               setDockLocations={setDockLocations}
               setWallLocations={setWallLocations}
             />
-            { renderBoxes() }
-            { renderGuys() }
-            {/* <Guy 
-              atlas={`${process.env.PUBLIC_URL}/images/sprites/guy/guy.json`} 
-              carryBox={carryBox}
-              x={guyLocation[0] * mapData.tilewidth} 
-              y={guyLocation[1] * mapData.tileheight} 
-              ref={guyRef}
-            /> */}
+            {renderBoxes()}
+            {renderGuys()}
           </>
         )}
       </Container>

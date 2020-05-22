@@ -16,7 +16,7 @@ const StartButton = () => {
   };
 
   return (
-    <button onClick={handleClick} className="start-button"><h1>Start {text}</h1></button>
+    <button onClick={handleClick} className="start-button"><h1>Start</h1></button>
   );
 }
 

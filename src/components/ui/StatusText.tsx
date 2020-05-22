@@ -2,6 +2,7 @@ import React, { useContext, useRef, useEffect, useState } from "react";
 import { AppContext } from "components/context/AppProvider";
 import './statusText.css';
 import { GameState } from "reducers/gameStateReducer";
+import { SPEED_MULTIPLIER } from "constants/gameSettings";
 
 const StatusText = () => {
   const { state } = useContext(AppContext);
@@ -26,7 +27,6 @@ const StatusText = () => {
     return (
       <div className="status">
         <div className="timer">
-          {/* {(time / 1000).toFixed(1)} sec */}
           {formatTime(time)}
         </div>
       </div>
@@ -40,16 +40,17 @@ const StatusText = () => {
 export default StatusText;
 
 const formatTime = (ms: number ) => {
-  let seconds = ms / 1000;
+  let seconds = (ms / 1000) * SPEED_MULTIPLIER;
   var hours = Math.floor( seconds / 3600 ); // 3,600 seconds in 1 hour
   seconds = seconds % 3600;
   var minutes = Math.floor( seconds / 60 );
   seconds = seconds % 60;
   if (hours > 0) {
-    return `${hours}:${minutes}:${seconds.toFixed(1)}`;
+    return `${padLeft(hours)}:${padLeft(minutes)}:${seconds.toFixed(1)}`;
   } 
-  if (minutes > 0) {
-    return `${minutes}:${seconds.toFixed(1)}`;
-  }
-  return `${seconds.toFixed(1)}`;
+  return `${padLeft(minutes)}:${seconds.toFixed(1)}`;
+}
+
+const padLeft = (input: number) => {
+  return `${input}`.padStart(2, '0');
 }

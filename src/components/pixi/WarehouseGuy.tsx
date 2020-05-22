@@ -1,5 +1,4 @@
-import React, { useState, useEffect, forwardRef, useRef } from 'react';
-import { useApp, useTick, Container } from "@inlet/react-pixi";
+import React, { useState, useEffect, useRef } from 'react';
 import * as PIXI from 'pixi.js';
 import Guy from './Guy';
 import { AnyAction } from 'components/context/AppProvider';
@@ -13,8 +12,7 @@ PixiPlugin.registerPIXI(PIXI);
 gsap.registerPlugin(PixiPlugin);
 
 interface Props {
-  //orderNo: string;
-  pickingList: PickingList;
+  pickingList?: PickingList;
   startLocation: [number, number];
   dispatch: React.Dispatch<AnyAction>;
   aStar: AStarFinder;
@@ -43,7 +41,7 @@ const WarehouseGuy = (props: Props & React.ComponentProps<typeof Guy>) => {
   const lastLocation = useRef<[number, number]>(startLocation);
   
   useEffect(() => {
-    if (!guyRef.current) return;
+    if (!guyRef.current || !pickingList) return;
     gsap.killTweensOf(guyRef.current);
 
     const findNextUnpickedProduct = () => {

@@ -13,7 +13,6 @@ export interface WMSData {
   slotting?: string;
 }
 
-
 export const initialWMSState = [{
   category: Categories.A,
   productCode: "IRN 590",
@@ -30,6 +29,7 @@ export const initialWMSState = [{
   category: Categories.A,
   productCode: "SMK 019",
   description: "Smoke detector",
+  slotting: "Usually sold with BAT 917"
 }, {
   category: Categories.A,
   productCode: "DLA 413",
@@ -40,8 +40,9 @@ export const initialWMSState = [{
   description: "Vacuum cleaner",
 }, {
   category: Categories.A,
-  productCode: "Battery charger",
-  description: "BAT 917",
+  productCode: "BAT 917",
+  description: "Battery charger",
+  slotting: "Usually sold with SMK 019"
 }, {
   category: Categories.B,
   productCode: "VIR 555",
