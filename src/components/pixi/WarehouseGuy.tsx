@@ -56,7 +56,7 @@ const WarehouseGuy = (props: Props & React.ComponentProps<typeof Guy>) => {
 
     if (productCode) {
       // There is a product to pick, go fetch it
-      console.log(`We need to pick ${productCode} (${orderNo}). It's location is ${getProductLocation(productCode)}. We start at ${pathStartLocation.x}, ${pathStartLocation.y}}`);
+      console.log(`[${props.name}] We need to pick ${productCode} (${orderNo}). It's location is ${getProductLocation(productCode)}. We start at ${pathStartLocation.x}, ${pathStartLocation.y}}`);
       
       // Determine the path to this product
       const path = aStar?.findPath(pathStartLocation, convertLocation(getProductLocation(productCode))) || [];
@@ -78,7 +78,7 @@ const WarehouseGuy = (props: Props & React.ComponentProps<typeof Guy>) => {
           // completed picking product
           setCarryBox(true);
           dispatch({ type: 'completeProductPick', productCode, orderNo});
-          console.log(`completed picking ${productCode} (${orderNo})`)
+          console.log(`[${props.name}] completed picking ${productCode} (${orderNo})`)
           const endLocation = path[path.length - 1];
           lastLocation.current = endLocation as [number, number];
         },
@@ -86,7 +86,7 @@ const WarehouseGuy = (props: Props & React.ComponentProps<typeof Guy>) => {
     } 
     else {
       // All done with this order, return home
-      console.log(`I guess we are done. Time to return to ${startLocation}`);
+      console.log(`[${props.name}] I guess we are done. Time to return to ${startLocation}`);
         
       // Determine the path home
       const path = aStar?.findPath(pathStartLocation, convertLocation(startLocation)) || [];
@@ -111,7 +111,7 @@ const WarehouseGuy = (props: Props & React.ComponentProps<typeof Guy>) => {
         },
       })
     }    
-  }, [aStar, dispatch, getProductLocation, startLocation, pickingList, tileSize]);
+  }, [aStar, dispatch, getProductLocation, startLocation, pickingList, tileSize, props.name]);
   
   return (
     <Guy

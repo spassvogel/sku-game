@@ -194,15 +194,18 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
     });
   }, [mapData, locationIsBlocked, wallLocations]);
 
-  const [pickingList, setPickingList] = useState<PickingList>();
+  const [pickingList1, setPickingList1] = useState<PickingList>();
+  const [pickingList2, setPickingList2] = useState<PickingList>();
 
   useEffect(() => {
     if (state.gameState === GameState.pickingBoxes) {
-      const nextPickingList = state.pickingLists.find(pL => !pL.complete);
-      setPickingList(nextPickingList);
-      if (!nextPickingList) {
-        dispatch({ type: 'completeGame' });
-      }
+      const nextPickingList1 = state.pickingLists.find((pL, i) => !pL.complete && i % 2 === 0);
+      setPickingList1(nextPickingList1);
+      const nextPickingList2 = state.pickingLists.find((pL, i) => !pL.complete && i % 2 !== 0);
+      setPickingList2(nextPickingList2);
+      // if (!nextPickingList) {
+      //   dispatch({ type: 'completeGame' });
+      // }
     }
   }, [dispatch, state.gameState, state.pickingLists]);
   
@@ -211,15 +214,28 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
     if (!aStar) return null;
 
     return (
-      <WarehouseGuy
-        pickingList={pickingList}  
-        startLocation={[10, 12]}
-        tileSize={mapData!.tilewidth}
-        getProductLocation={getProductLocation}
-        dispatch={dispatch}
-        aStar={aStar}
-        visible={state.gameState === GameState.pickingBoxes}
-      /> 
+      <>
+        <WarehouseGuy
+          name={'guy1'}
+          pickingList={pickingList1}  
+          startLocation={[10, 12]}
+          tileSize={mapData!.tilewidth}
+          getProductLocation={getProductLocation}
+          dispatch={dispatch}
+          aStar={aStar}
+          // visible={state.gameState === GameState.pickingBoxes}
+        />
+        <WarehouseGuy
+          name={'guy2'}
+          pickingList={pickingList2}  
+          startLocation={[11, 12]}
+          tileSize={mapData!.tilewidth}
+          getProductLocation={getProductLocation}
+          dispatch={dispatch}
+          aStar={aStar}
+          // visible={state.gameState === GameState.pickingBoxes}
+        />
+      </> 
     )
   }
 

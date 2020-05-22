@@ -56,13 +56,13 @@ const Guy = forwardRef<PIXI.Container, any>((props: Props & React.ComponentProps
   });
 
   useEffect(() => {
-    app.loader.add(atlas).load((_, resource) => {
-      const allFrames = resource[atlas]!.data.frames;
+    const loadingComplete = () => {
+      const allFrames = app.loader.resources[atlas].data.frames;
+      console.log(`${props.name} frames: ${allFrames}!`)
       const indexedTextures = Object.keys(allFrames).reduce((acc: any, frame: string) => {
         // frames are in the format of: 'front1', 'front2', 'left-box1' etc
         // create a mapping keyed by the part without the number
         const animation = frame.substring(0, frame.length - 1);
-        //const orientation = frameName as Orientation;
         if (!acc[animation]) {
           acc[animation] = [];
         }
@@ -71,8 +71,16 @@ const Guy = forwardRef<PIXI.Container, any>((props: Props & React.ComponentProps
       }, {});
 
       setFrames(indexedTextures);
-    });
-  }, [app.loader, atlas]);
+      console.log(`${props.name} complete!`)
+    }
+
+    app.loader.onComplete.once(loadingComplete);
+    if (!app.loader.loading) {
+      app.loader.add(atlas).load();
+    }
+    
+  }, [app.loader, app.loader.loading, atlas, props.name]);
+
   if (!frames) return null;
   const animationFrames = frames[`${orientation}${carryBox ? '-box': ''}`];
   return (
