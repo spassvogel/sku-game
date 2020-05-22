@@ -13,7 +13,7 @@ gsap.registerPlugin(PixiPlugin);
 
 interface Props {
   pickingList?: PickingList;
-  startLocation: [number, number];
+  homeLocation: [number, number];
   dispatch: React.Dispatch<AnyAction>;
   aStar: AStarFinder;
   getProductLocation: (productCode: string) => [number, number]
@@ -29,7 +29,7 @@ const WarehouseGuy = (props: Props & React.ComponentProps<typeof Guy>) => {
     dispatch,
     pickingList,
     aStar,
-    startLocation,
+    homeLocation,
     tileSize,
     getProductLocation,
     ...guyProps
@@ -38,29 +38,37 @@ const WarehouseGuy = (props: Props & React.ComponentProps<typeof Guy>) => {
   const guyRef = useRef(null);
   const [carryBox, setCarryBox] = useState<boolean>(false);
 
-  const lastLocation = useRef<[number, number]>(startLocation);
+  const lastLocation = useRef<[number, number]>(homeLocation); // aStar has to know where this guy starts from
+  const currentDestination = useRef<string>();
   
   useEffect(() => {
     if (!guyRef.current || !pickingList) return;
-    gsap.killTweensOf(guyRef.current);
 
-    const findNextUnpickedProduct = () => {
-      return pickingList.products.find(p => (pickingList.pickedProducts || []).indexOf(p) === -1);
-    }
+
     const { orderNo } = pickingList;
-    //console.log("im a guy and im alive. my job is " + pickingList.orderNo)
     
+    //console.log(`[${props.name}] picking list: `, pickingList.products.find(value => !pickedProducts.includes(value)) )
+   
+    const productCode = pickingList.products.find(value => !(pickingList.pickedProducts || []).includes(value));
+    const destination = (productCode || 'home');
+    if (currentDestination.current && (currentDestination.current === destination)) {
+      //console.log(`[${props.name}] was already underway to ${productCode} ${currentDestination.current}`)
+      // todo: this is to prevent the guy from starting another animation when another guy picks up a boxes
+      // Would be better to useMemo or something but cba now
+      return;
+    }
+    currentDestination.current = productCode || destination;
+
+    gsap.killTweensOf(guyRef.current);
     const tl = gsap.timeline();
-    const pathStartLocation = convertLocation(lastLocation.current || startLocation);
-    const productCode = findNextUnpickedProduct();
+    const pathStartLocation = convertLocation(lastLocation.current || homeLocation);
 
     if (productCode) {
       // There is a product to pick, go fetch it
-      console.log(`[${props.name}] We need to pick ${productCode} (${orderNo}). It's location is ${getProductLocation(productCode)}. We start at ${pathStartLocation.x}, ${pathStartLocation.y}}`);
+      //console.log(`[${props.name}] We need to pick ${productCode} (${orderNo}). It's location is ${getProductLocation(productCode)}. We start at ${pathStartLocation.x}, ${pathStartLocation.y}}`);
       
       // Determine the path to this product
       const path = aStar?.findPath(pathStartLocation, convertLocation(getProductLocation(productCode))) || [];
-      console.log('the path to walk is ', path);
 
       // create animation to walk this path
       path.forEach((loc: number[]) => {
@@ -78,7 +86,7 @@ const WarehouseGuy = (props: Props & React.ComponentProps<typeof Guy>) => {
           // completed picking product
           setCarryBox(true);
           dispatch({ type: 'completeProductPick', productCode, orderNo});
-          console.log(`[${props.name}] completed picking ${productCode} (${orderNo})`)
+          //console.log(`[${props.name}] completed picking ${productCode} (${orderNo})`)
           const endLocation = path[path.length - 1];
           lastLocation.current = endLocation as [number, number];
         },
@@ -86,10 +94,10 @@ const WarehouseGuy = (props: Props & React.ComponentProps<typeof Guy>) => {
     } 
     else {
       // All done with this order, return home
-      console.log(`[${props.name}] I guess we are done. Time to return to ${startLocation}`);
+      //console.log(`[${props.name}] I guess we are done. Time to return to ${homeLocation}`);
         
       // Determine the path home
-      const path = aStar?.findPath(pathStartLocation, convertLocation(startLocation)) || [];
+      const path = aStar?.findPath(pathStartLocation, convertLocation(homeLocation)) || [];
       
       // create animation to walk this path
       path.forEach((loc: number[]) => {
@@ -106,18 +114,18 @@ const WarehouseGuy = (props: Props & React.ComponentProps<typeof Guy>) => {
         onComplete: () => { 
           // completed picking product
           setCarryBox(false);
-          lastLocation.current = startLocation;
+          lastLocation.current = homeLocation;
           dispatch({ type: 'completeOrder', orderNo });
         },
       })
     }    
-  }, [aStar, dispatch, getProductLocation, startLocation, pickingList, tileSize, props.name]);
+  }, [aStar, dispatch, getProductLocation, homeLocation, pickingList, tileSize, props.name]);
   
   return (
     <Guy
       atlas={`${process.env.PUBLIC_URL}/images/sprites/guy/guy.json`} 
-      x={startLocation[0] * tileSize} 
-      y={startLocation[1] * tileSize}
+      x={homeLocation[0] * tileSize} 
+      y={homeLocation[1] * tileSize}
       carryBox={carryBox}
       {...guyProps} 
       ref={guyRef} 

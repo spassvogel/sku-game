@@ -36,7 +36,7 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
   const [mapData, setMapData] = useState<TiledMapData>();
   const [rackLocations, setRackLocations] = useState<[number, number][]>([]);
   const [dockLocations, setDockLocations] = useState<[number, number][]>([]);
-  const [wallLocations, setWallLocations] = useState<[number, number][]>([]);   
+  const [wallLocations, setWallLocations] = useState<[number, number][]>([]);
   const ref = useRef<PIXI.Container>(null);
 
   const jsonPath = `${process.env.PUBLIC_URL}/${tilemap}`;
@@ -65,7 +65,6 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
    * returns undefined */
   const getRackAtLocation = useCallback((location: [number, number]) => {
     // Racks are two tiles high but the box is placed at the top tile
-    // return rackLocations.find((l) => (l[0] === location[0] && (l[1] === location[1] || l[1] === location[1] + 1)))
     return rackLocations.find((l) => (l[0] === location[0] && l[1] === location[1]))
   }, [rackLocations]);
 
@@ -196,16 +195,19 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
 
   const [pickingList1, setPickingList1] = useState<PickingList>();
   const [pickingList2, setPickingList2] = useState<PickingList>();
+  const [pickingList3, setPickingList3] = useState<PickingList>();
 
   useEffect(() => {
     if (state.gameState === GameState.pickingBoxes) {
-      const nextPickingList1 = state.pickingLists.find((pL, i) => !pL.complete && i % 2 === 0);
+      const nextPickingList1 = state.pickingLists.find((pL, i) => !pL.complete && i % 3 === 0);
       setPickingList1(nextPickingList1);
-      const nextPickingList2 = state.pickingLists.find((pL, i) => !pL.complete && i % 2 !== 0);
+      const nextPickingList2 = state.pickingLists.find((pL, i) => !pL.complete && i % 3 === 1);
       setPickingList2(nextPickingList2);
-      // if (!nextPickingList) {
-      //   dispatch({ type: 'completeGame' });
-      // }
+      const nextPickingList3 = state.pickingLists.find((pL, i) => !pL.complete && i % 3 === 2);
+      setPickingList3(nextPickingList3);
+      if (!nextPickingList1 && !nextPickingList2 && !nextPickingList3) {
+        dispatch({ type: 'completeGame' });
+      }
     }
   }, [dispatch, state.gameState, state.pickingLists]);
   
@@ -218,22 +220,32 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
         <WarehouseGuy
           name={'guy1'}
           pickingList={pickingList1}  
-          startLocation={[10, 12]}
+          homeLocation={[9, 12]}
           tileSize={mapData!.tilewidth}
           getProductLocation={getProductLocation}
           dispatch={dispatch}
           aStar={aStar}
-          // visible={state.gameState === GameState.pickingBoxes}
+          visible={state.gameState === GameState.pickingBoxes}
         />
         <WarehouseGuy
           name={'guy2'}
           pickingList={pickingList2}  
-          startLocation={[11, 12]}
+          homeLocation={[10, 12]}
           tileSize={mapData!.tilewidth}
           getProductLocation={getProductLocation}
           dispatch={dispatch}
           aStar={aStar}
-          // visible={state.gameState === GameState.pickingBoxes}
+          visible={state.gameState === GameState.pickingBoxes}
+        />
+        <WarehouseGuy
+          name={'guy3'}
+          pickingList={pickingList3}  
+          homeLocation={[11, 12]}
+          tileSize={mapData!.tilewidth}
+          getProductLocation={getProductLocation}
+          dispatch={dispatch}
+          aStar={aStar}
+          visible={state.gameState === GameState.pickingBoxes}
         />
       </> 
     )

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, forwardRef, useRef } from 'react';
-import { useApp, useTick, Container } from "@inlet/react-pixi";
+import { useApp, useTick, Container, Text } from "@inlet/react-pixi";
 import * as PIXI from 'pixi.js';
 import SpriteAnimated from './SpriteAnimated';
 
@@ -15,6 +15,7 @@ interface Props {
   carryBox: boolean;
 }
 
+const DEBUG = false;
 //
 const Guy = forwardRef<PIXI.Container, any>((props: Props & React.ComponentProps<typeof Container>, ref) => {
   const {
@@ -28,7 +29,6 @@ const Guy = forwardRef<PIXI.Container, any>((props: Props & React.ComponentProps
   const [orientation, setOrientation] = useState<Orientation>(Orientation.right);
   const app = useApp();
   const lastPositionPoint = useRef<PIXI.Point>();
-  //const orientation = useRef<Orientation>();
 
   useTick(() => {
     if (!ref || !(ref as any).current) return;
@@ -58,7 +58,6 @@ const Guy = forwardRef<PIXI.Container, any>((props: Props & React.ComponentProps
   useEffect(() => {
     const loadingComplete = () => {
       const allFrames = app.loader.resources[atlas].data.frames;
-      console.log(`${props.name} frames: ${allFrames}!`)
       const indexedTextures = Object.keys(allFrames).reduce((acc: any, frame: string) => {
         // frames are in the format of: 'front1', 'front2', 'left-box1' etc
         // create a mapping keyed by the part without the number
@@ -71,7 +70,6 @@ const Guy = forwardRef<PIXI.Container, any>((props: Props & React.ComponentProps
       }, {});
 
       setFrames(indexedTextures);
-      console.log(`${props.name} complete!`)
     }
 
     app.loader.onComplete.once(loadingComplete);
@@ -83,6 +81,7 @@ const Guy = forwardRef<PIXI.Container, any>((props: Props & React.ComponentProps
 
   if (!frames) return null;
   const animationFrames = frames[`${orientation}${carryBox ? '-box': ''}`];
+
   return (
     <Container 
       ref={ref}
@@ -95,6 +94,16 @@ const Guy = forwardRef<PIXI.Container, any>((props: Props & React.ComponentProps
         textures={animationFrames}
         anchor={[0, 0.1]}
       />
+      { DEBUG && (<Text style={{
+        fontSize: 12,
+        align: 'center',
+        fill: '0xfff',
+        strokeThickness: 1,
+        wordWrap : true,
+        wordWrapWidth : 440
+      }}
+      text={`${props.name}`} />
+      )}
     </Container>
   )
 });
