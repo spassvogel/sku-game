@@ -57,8 +57,8 @@ const generateBoxLocationsAtRacks = () => {
 }
 
 export const initialWarehouseState: WarehouseState = {
-  // boxes: generateBoxLocationsAtDock()
-  boxes: generateBoxLocationsAtRacks()
+  boxes: generateBoxLocationsAtDock()
+  // boxes: generateBoxLocationsAtRacks()
 }
 
 

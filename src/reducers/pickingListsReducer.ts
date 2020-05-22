@@ -17,7 +17,12 @@ export const generateInitialPickingLists = (): PickingList[] => {
     ["SMK 019", "BAT 917"],
     ["VAC 082"],
     ["SPK 876", "PTV 555", "DLA 413"],
-    ["IRN 590"]
+    ["IRN 590"],
+    ["BAM 223"],
+    ["DSC 743", "MIC 099"],
+    ["DLA 413"],
+    ["DLA 413"],
+    ["SMK 019", "BAT 917", "RFG 411"],
   ];
 
   return productPickingList.map(products => {
