@@ -195,23 +195,21 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
 
 
   const renderGuys = () => {
-    if(state.gameState === GameState.pickingBoxes) {      
-      const nextPickingList = state.pickingLists.find(pL => !pL.complete);
-      if (!nextPickingList) return null;
-      if (!aStar) return null;
+    const nextPickingList = state.pickingLists.find(pL => !pL.complete);
+    if (!nextPickingList) return null;
+    if (!aStar) return null;
 
-      return (
-        <WarehouseGuy
-          pickingList={nextPickingList}  
-          startLocation={[10, 12]}
-          tileSize={mapData!.tilewidth}
-          getProductLocation={getProductLocation}
-          dispatch={dispatch}
-          aStar={aStar}
-        /> 
-      )
-    }
-    return null;
+    return (
+      <WarehouseGuy
+        pickingList={nextPickingList}  
+        startLocation={[10, 12]}
+        tileSize={mapData!.tilewidth}
+        getProductLocation={getProductLocation}
+        dispatch={dispatch}
+        aStar={aStar}
+        visible={state.gameState === GameState.pickingBoxes}
+      /> 
+    )
   }
 
   return (

@@ -13,7 +13,6 @@ const StartButton = () => {
       return;
     }
     dispatch({ type: 'startPicking'});
-    dispatch({ type: 'setStatusText', text: "Let's start picking!"});
   };
 
   return (
