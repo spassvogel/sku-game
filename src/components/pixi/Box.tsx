@@ -12,6 +12,7 @@ interface Props {
   location?: [number, number];
   tileWidth: number;
   tileHeight: number;
+  selected: boolean;
   behindWall?: boolean;
   onClick?: (event: PIXI.interaction.InteractionEvent) => void;
   onDragged?: (event: PIXI.interaction.InteractionEvent) => void;
@@ -25,7 +26,8 @@ const Box = (props: Props & React.ComponentProps<typeof Container>) => {
     location = [0, 0],
     tileWidth = 0, 
     tileHeight = 0,
-    behindWall
+    behindWall,
+    selected
   } = props;
   const ref = useRef<PIXI.Container>(null);
   const imgRef = useRef<PIXI.Sprite>(null);
@@ -101,6 +103,20 @@ const Box = (props: Props & React.ComponentProps<typeof Container>) => {
         graphics.drawRect(line / 2, line / 2, tileWidth - line / 2, tileHeight - line / 2);
         graphics.endFill();
       }} /> */}
+      {selected && (<Graphics draw={(graphics:PIXI.Graphics) => {
+          const line = 2;
+          const color = 0xffcc00;
+          graphics.clear();
+          graphics.lineStyle(line, color);
+          if (behindWall && !data.current) {
+            graphics.drawRect(2, tileHeight / 2 - 1, tileWidth - 4, tileHeight / 2 + 2 );
+          }
+          else {
+            graphics.drawRect(2, -tileHeight / 2 - 1, tileWidth - 4, tileHeight + 2 );
+          }
+          graphics.endFill();
+        }}
+      />)}
       <Sprite 
         anchor={behindWall ? [0, -0.5] : [0, 0.5]}
         image={img}

@@ -37,6 +37,7 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
   const [rackLocations, setRackLocations] = useState<[number, number][]>([]);
   const [dockLocations, setDockLocations] = useState<[number, number][]>([]);
   const [wallLocations, setWallLocations] = useState<[number, number][]>([]);
+  const [selectedBox, setSelectedBox] = useState<string>();
   const ref = useRef<PIXI.Container>(null);
 
   const jsonPath = `${process.env.PUBLIC_URL}/${tilemap}`;
@@ -94,7 +95,10 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
 
   const handleClick = (productCode: string, event: PIXI.interaction.InteractionEvent) => {
     props.onProductClick(productCode);
+
+    setSelectedBox(productCode);
   }
+
 
   const handleDragged = (productCode: string, event: PIXI.interaction.InteractionEvent) => {
     const position = event.data.global;
@@ -155,6 +159,7 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
         location={box.location} 
         tileWidth={mapData.tilewidth} 
         tileHeight={mapData.tileheight}
+        selected={name === selectedBox}
         onClick={(event) => handleClick(name, event)}
         onDragged={(event) => handleDragged(name, event)}
         onReleased={(event) => handleBoxDragEnd(name, event)}
@@ -201,6 +206,8 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
 
   useEffect(() => {
     if (state.gameState === GameState.pickingBoxes) {
+      setSelectedBox(undefined);
+
       const nextPickingList1 = state.pickingLists.find((pL, i) => !pL.complete && i % 3 === 0);
       setPickingList1(nextPickingList1);
       const nextPickingList2 = state.pickingLists.find((pL, i) => !pL.complete && i % 3 === 1);
