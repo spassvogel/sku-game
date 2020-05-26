@@ -35,6 +35,7 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
 
   const [mapData, setMapData] = useState<TiledMapData>();
   const [rackLocations, setRackLocations] = useState<[number, number][]>([]);
+  const [rackFarLocations, setRackFarLocations] = useState<[number, number][]>([]); // the racks that are considered 'far'
   const [dockLocations, setDockLocations] = useState<[number, number][]>([]);
   const [wallLocations, setWallLocations] = useState<[number, number][]>([]);
   const [selectedBox, setSelectedBox] = useState<string>();
@@ -75,8 +76,14 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
     return dockLocations.find((l) => (l[0] === location[0] && l[1] === location[1]))
   }, [dockLocations]);
 
-  const getProductLocation = (productCode: string) => {
-    return state.warehouse.boxes[productCode].location;
+  const getProductLocation = (productCode: string): { location: [number, number], far: boolean } => {
+    const {location} = state.warehouse.boxes[productCode];
+    const far = !!rackFarLocations.find((l) => (l[0] === location[0] && l[1] === location[1]));
+    // Some products are considered 'far', it takes longer to pick those
+    return {
+      location,
+      far
+    };
   };
   
   // Converts pixel coordinate to scene location
@@ -275,6 +282,7 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
               basePath={basePath} 
               data={mapData} 
               setRackLocations={setRackLocations}
+              setRackFarLocations={setRackFarLocations}
               setDockLocations={setDockLocations}
               setWallLocations={setWallLocations}
             />

@@ -16,7 +16,7 @@ interface Props {
   homeLocation: [number, number];
   dispatch: React.Dispatch<AnyAction>;
   aStar: AStarFinder;
-  getProductLocation: (productCode: string) => [number, number]
+  getProductLocation: (productCode: string) => { location: [number, number], far: boolean }
 }
 
 const convertLocation = (location: [number, number]) => {
@@ -65,11 +65,12 @@ const WarehouseGuy = (props: Props & React.ComponentProps<typeof Guy>) => {
 
     if (productCode) {
       // There is a product to pick, go fetch it
-      //console.log(`[${props.name}] We need to pick ${productCode} (${orderNo}). It's location is ${getProductLocation(productCode)}. We start at ${pathStartLocation.x}, ${pathStartLocation.y}}`);
       
       // Determine the path to this product
-      const path = aStar?.findPath(pathStartLocation, convertLocation(getProductLocation(productCode))) || [];
+      const {location, far} = getProductLocation(productCode);
+      // console.log(`[${props.name}] We need to pick ${productCode} (${orderNo}). It's location is ${location}. It's${far ? "" : " not"} far. We start at ${pathStartLocation.x}, ${pathStartLocation.y}}`);
 
+      const path = aStar?.findPath(pathStartLocation, convertLocation(location)) || [];
       // create animation to walk this path
       path.forEach((loc: number[]) => {
         tl.to(guyRef.current, {
@@ -78,10 +79,11 @@ const WarehouseGuy = (props: Props & React.ComponentProps<typeof Guy>) => {
             x: loc[0] * tileSize,
             y: loc[1] * tileSize
           }, 
-          duration: 1 / SPEED_MULTIPLIER  // it takes one second real time to walk one tile
+          duration: 1 / SPEED_MULTIPLIER + (far ? .035 : 0)  // it takes one second real time to walk one tile
         });
       }); 
       tl.to(guyRef.current, {
+        delay: far ? .2 : 0, // We cheat a bit to make the difference bigger. Taking a box from a 'far' location takes half a second longer
         onComplete: () => { 
           // completed picking product
           setCarryBox(true);

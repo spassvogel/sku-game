@@ -10,6 +10,7 @@ interface Props {
   basePath: string;
   data: TiledMapData;
   setRackLocations: (tiles: [number, number][]) => void;
+  setRackFarLocations: (tiles: [number, number][]) => void;
   setDockLocations: (tiles: [number, number][]) => void;
   setWallLocations: (tiles: [number, number][]) => void;
 }
@@ -17,7 +18,14 @@ interface Props {
 const DEBUG = false;
 
 const Tilemap = (props: Props) => {
-  const {basePath, data, setRackLocations, setDockLocations, setWallLocations} = props;
+  const {
+    basePath, 
+    data, 
+    setRackLocations, 
+    setRackFarLocations, 
+    setDockLocations, 
+    setWallLocations
+  } = props;
   const [layers, setLayers] = useState<JSX.Element[]>();
   const [debug, setDebug] = useState<JSX.Element[]>();
 
@@ -33,6 +41,7 @@ const Tilemap = (props: Props) => {
     spritesheet.parse(() => {
       // Rack tiles are marked on the tileset with property 'rack'
       const rackTileIds = tileset.tiles?.filter(tile => tile.properties?.some(p => p.name === 'rack' && p.value)).map(t => t.id);
+      const rackFarTileIds = tileset.tiles?.filter(tile => tile.properties?.some(p => p.name === 'far' && p.value)).map(t => t.id);
       const dockTileIds = tileset.tiles?.filter(tile => tile.properties?.some(p => p.name === 'dock' && p.value)).map(t => t.id);
       const layers = data.layers.filter(layer => layer.visible).map(layer => {
 
@@ -48,6 +57,7 @@ const Tilemap = (props: Props) => {
       const placeholderLayer = data.layers.find(layer => layer.properties?.some(p => p.name === 'placeholders' && p.value));
       if (placeholderLayer) {
         const rackLocations: [number, number][] = [];
+        const rackFarLocations: [number, number][] = [];
         const dockLocations: [number, number][] = [];
 
         placeholderLayer.data.forEach((id, index) => {         
@@ -56,6 +66,11 @@ const Tilemap = (props: Props) => {
             const y = Math.floor(index / placeholderLayer.width);
             rackLocations.push([x, y]);  
           }
+          if(rackFarTileIds && rackFarTileIds.some(rtId => rtId === id - tileset.firstgid)){
+            const x = (index % placeholderLayer.width);
+            const y = Math.floor(index / placeholderLayer.width);
+            rackFarLocations.push([x, y]);  
+          }
           if(dockTileIds && dockTileIds.some(rtId => rtId === id - tileset.firstgid)){
             const x = (index % placeholderLayer.width);
             const y = Math.floor(index / placeholderLayer.width);
@@ -63,8 +78,8 @@ const Tilemap = (props: Props) => {
           }
 
           setRackLocations(rackLocations);
+          setRackFarLocations(rackFarLocations);
           setDockLocations(dockLocations);
-
         });
       }
       setWallLocations(wallLocations);

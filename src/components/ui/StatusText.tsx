@@ -24,10 +24,23 @@ const StatusText = () => {
   }, [state.gameState, time]);
 
   if (state.gameState === GameState.pickingBoxes) {
+    const maxTime = 45000; // maximum amount of time
+    const progressBarWidth = Math.min(time / maxTime, 1);
+    const progressColor = time > 27000 ? "#f63a0f" : "#86e01e";
+
     return (
       <div className="status">
-        <div className="timer">
-          {formatTime(time)}
+        <div className="progress">
+          <div 
+            className="progress-bar"
+            style={{
+              width: `${progressBarWidth*100}%`,
+              backgroundColor: progressColor
+            }}
+          ></div>
+          <div className="text">
+            {formatTime(time)}
+          </div>
         </div>
       </div>
     );
@@ -54,3 +67,4 @@ const formatTime = (ms: number ) => {
 const padLeft = (input: number) => {
   return `${input}`.padStart(2, '0');
 }
+
