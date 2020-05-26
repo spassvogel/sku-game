@@ -10,6 +10,7 @@ export interface AppState {
   pickingLists: PickingList[];
   warehouse: WarehouseState; // Where all the boxes are in the warehouse
   muted: boolean;
+  time: number;
 }
 
 
@@ -20,5 +21,6 @@ export const initialState: AppState = {
   pickingLists: generateInitialPickingLists(),
   warehouse: initialWarehouseState,
   muted: localStorage.getItem('muted') === 'true',
+  time: 0,
 }
 

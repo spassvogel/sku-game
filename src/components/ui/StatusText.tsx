@@ -5,28 +5,28 @@ import { GameState } from "reducers/gameStateReducer";
 import { SPEED_MULTIPLIER } from "constants/gameSettings";
 
 const StatusText = () => {
-  const { state } = useContext(AppContext);
+  const { state, dispatch } = useContext(AppContext);
   const text = state.statusText;
-  const [time, setTime] = useState<number>(0);
+  const time = state.time;
 
   useEffect(() => {
     let timeout: NodeJS.Timeout;
     const start = performance.now();
     if (state.gameState === GameState.pickingBoxes) {
       const update = () => {
-        setTime(time => time + (performance.now() - start));
+        dispatch({type: 'tick', start})
       };
       timeout = setInterval(update, 100);
     }
     return () => {
       clearTimeout(timeout);
     }
-  }, [state.gameState, time]);
+  }, [dispatch, state.gameState]);
 
   if (state.gameState === GameState.pickingBoxes) {
     const maxTime = 45000; // maximum amount of time
     const progressBarWidth = Math.min(time / maxTime, 1);
-    const progressColor = time > 27000 ? "#f63a0f" : "#86e01e";
+    const progressColor = time > 30000 ? "#f63a0f" : "#86e01e";
 
     return (
       <div className="status">
