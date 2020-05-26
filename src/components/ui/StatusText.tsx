@@ -52,7 +52,7 @@ const StatusText = () => {
 
 export default StatusText;
 
-const formatTime = (ms: number ) => {
+export const formatTime = (ms: number ) => {
   let seconds = (ms / 1000);
   var hours = Math.floor( seconds / 3600 ); // 3,600 seconds in 1 hour
   seconds = seconds % 3600;

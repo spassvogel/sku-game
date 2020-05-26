@@ -8,6 +8,7 @@ import StartButton from 'components/ui/StartButton';
 import { AppProvider } from 'components/context/AppProvider';
 import StatusText from 'components/ui/StatusText';
 import Settings from 'components/ui/Settings';
+import GameOverScreen from 'components/ui/GameOverScreen';
 window.PIXI = PIXI;
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
         <IPad selectedProduct={selectedProduct}/>
         <StartButton />
         <StatusText />
+        <GameOverScreen />
       </div>
     </AppProvider>
   );

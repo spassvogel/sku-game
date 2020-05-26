@@ -50,7 +50,8 @@ export const generateInitialPickingLists = (): PickingList[] => {
 export type PickingListsAction =
  | { type: 'startPicking', guy: number, orderNo: string }
  | { type: 'completeProductPick', productCode: string, orderNo: string }
- | { type: 'completeOrder', orderNo: string };
+ | { type: 'completeOrder', orderNo: string }
+ | { type: 'restart' };
 
  
 export const pickingListsReducer = (state: PickingList[], action: PickingListsAction ) => {
@@ -88,6 +89,13 @@ export const pickingListsReducer = (state: PickingList[], action: PickingListsAc
         }
         return pL;
       });
+    case 'restart':
+      return state.map(pL => ({
+        ...pL,
+        guy: undefined,
+        complete: false,
+        pickedProducts: []
+      }));
     default:
       return state;
   }

@@ -108,32 +108,35 @@ const generateGoodBoxLocations = (): { [id: string]: BoxState } => {
 }
 
 export const initialWarehouseState: WarehouseState = {
-  // boxes: generateBoxLocationsAtDock()
+  boxes: generateBoxLocationsAtDock()
   // boxes: generateBoxLocationsAtRacks()
   // boxes: generateBadBoxLocations()
-  boxes: generateGoodBoxLocations()
+  // boxes: generateGoodBoxLocations()
 }
 
 
 export type WarehouseAction =
- | { type: 'placeBox'; productCode: string, location: [number, number], inRack: boolean };
+ | { type: 'placeBox'; productCode: string, location: [number, number], inRack: boolean }
+ | { type: 'restart' };
 
 export const warehouseReducer = (state: WarehouseState, action: WarehouseAction) => {
   switch (action.type) {
-      case 'placeBox':
-        const { location, inRack } = action; 
-        const boxes = { 
-          ...state.boxes,
-          [action.productCode]: {
-              ...state.boxes[action.productCode],
-              location,
-              inRack
-          }
+    case 'placeBox':
+      const { location, inRack } = action; 
+      const boxes = { 
+        ...state.boxes,
+        [action.productCode]: {
+            ...state.boxes[action.productCode],
+            location,
+            inRack
         }
-        return { 
-          ...state,
-          boxes
-        } ;
+      }
+      return { 
+        ...state,
+        boxes
+      } ;
+    case 'restart':
+      return initialWarehouseState;  
     default: {
         return state;
     }

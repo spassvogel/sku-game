@@ -94,29 +94,23 @@ const Box = (props: Props & React.ComponentProps<typeof Container>) => {
       mousemove={onDragMove}
       touchmove={onDragMove}
     >
-      {/* <Graphics draw={(graphics:PIXI.Graphics) => {
-        const line = 2;
-//         const blocked = blockedTiles.some((loc) => loc[0] === location[0] && loc[1] === location[1]);
-        // const color = blocked ? 0xFF3300 : 0x00FF00;
-        const color = 0xFF3300;
-        graphics.lineStyle(line, color);
-        graphics.drawRect(line / 2, line / 2, tileWidth - line / 2, tileHeight - line / 2);
-        graphics.endFill();
-      }} /> */}
-      {selected && (<Graphics draw={(graphics:PIXI.Graphics) => {
-          const line = 2;
-          const color = 0xffcc00;
-          graphics.clear();
-          graphics.lineStyle(line, color);
-          if (behindWall && !data.current) {
-            graphics.drawRect(2, tileHeight / 2 - 1, tileWidth - 4, tileHeight / 2 + 2 );
-          }
-          else {
-            graphics.drawRect(2, -tileHeight / 2 - 1, tileWidth - 4, tileHeight + 2 );
-          }
-          graphics.endFill();
-        }}
-      />)}
+      {selected && (
+        <Graphics draw={(graphics:PIXI.Graphics) => {
+            const line = 2;
+            const color = 0xffcc00;
+            // const color = 0xbada55;
+            graphics.clear();
+            graphics.lineStyle(line, color);
+            if (behindWall) {
+              graphics.drawRect(2, tileHeight / 2 - 1, tileWidth - 4, tileHeight / 2 + 2 );
+            }
+            else {
+              graphics.drawRect(2, -tileHeight / 2 - 1, tileWidth - 4, tileHeight + 2 );
+            }
+            graphics.endFill();
+          }}
+        />
+      )}
       <Sprite 
         anchor={behindWall ? [0, -0.5] : [0, 0.5]}
         image={img}
@@ -130,7 +124,6 @@ const Box = (props: Props & React.ComponentProps<typeof Container>) => {
         ref={dragRef}
         visible={false}
       />        
-      {/* </Graphics> */}
     </Container>
   );
 }

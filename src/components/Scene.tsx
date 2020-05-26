@@ -140,7 +140,7 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
       const otherBoxName = getBoxNameAtLocation(rackOrDockLoc);
       if (!otherBoxName || otherBoxName === productCode) {
         const inRack = !!rackLocation;
-        if (otherBoxName !== productCode) sound.play('snap'); 
+        if (otherBoxName !== productCode && !state.muted) sound.play('snap'); 
         dispatch({ type: 'placeBox', productCode, location: rackOrDockLoc!, inRack});
         return;
       }
@@ -151,7 +151,7 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
     const originX = box.location[0] * mapData!.tilewidth;
     const originY = box.location[1] * mapData!.tileheight;
 
-    sound.play('whoosh'); 
+    if (!state.muted) sound.play('whoosh'); 
     gsap.to(event.currentTarget, { 
       duration: .5,
       ease: "bounce.out",
