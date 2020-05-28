@@ -46,7 +46,7 @@ export const initialWMSState = [{
 }, {
   category: Categories.B,
   productCode: "VIR 555",
-  description: "Virtual Reality headset",
+  description: "VR headset",
 }, {
   category: Categories.B,
   productCode: "PTV 555",
@@ -55,7 +55,7 @@ export const initialWMSState = [{
 }, {
   category: Categories.B,
   productCode: "SPK 876",
-  description: "Home Theatre System/Speaker System",
+  description: "Home Theatre System",
   slotting: "Usually sold with PTV 555"
 }, {
   category: Categories.B,
@@ -94,5 +94,5 @@ export const initialWMSState = [{
 }, {
   category: Categories.D,
   productCode: "CST 964",
-  description: "Cassette Player",      
+  description: "Cassette Player",
 }]
