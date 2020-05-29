@@ -44,7 +44,7 @@ const Box = (props: Props & React.ComponentProps<typeof Container>) => {
   
   const onDragStart = (event: PIXI.interaction.InteractionEvent) => {
     data.current = event.data;
-    event.currentTarget.zIndex = 4;
+    event.currentTarget.zIndex = 6;
     event.stopPropagation(); 
     if (props.onClick) props.onClick(event);
 

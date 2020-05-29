@@ -11,32 +11,12 @@ export interface PickingList {
 export const generateInitialPickingLists = (): PickingList[] => {
   // the actual products are not random, but the rest of the data is
   const productPickingList = [
-    ["MIC 099", "MWO 901", "DSC 743"],
-    ["WSH 322"],
-    ["SMX 041", "OTV 482", "CAM 679"],
-    ["SMK 019", "BAT 917"],
-    ["VAC 082"],
-    ["SPK 876", "PTV 555", "DLA 413"],
-    ["IRN 590"],
-    ["BAM 223"],
-    ["DSC 743", "MIC 099"],
-    ["DLA 413"],
-    ["DLA 413"],
-    ["SMK 019", "BAT 917", "RFG 411"],
-    ["IRN 590"],
-    ["DLA 413", "VAC 082"],
-    ["PTV 555", "SPK 876"],
-    ["SMK 019", "BAT 917"],
-    ["VIR 555"],
-    ["CAM 679", "IRN 590"],
-    ["BAM 223"],
-    ["IRN 590"],
-    ["BAM 223", "VAC 082"],
-    ["SMK 019", "BAT 917"],
-    ["VIR 555"],
-    ["VIR 555"],
-    ["CAM 679", "BAM 223"],
-    ["SPK 876", "PTV 555"]
+    ["IRN 590", "CAM 679"],
+    ["CAM 679", "VRL 444", "IRN 590"],
+    ["VRL 444", "SMK 019", "BAT 917", "SPK 876", "PTV 555"],
+    ["RFG 411", "IRN 590", "CAM 679"],
+    ["SMX 041", "PTV 555", "SPK 876", "CAM 679"],
+    ["BAT 917", "SMK 019", "IRN 590", "WSH 322"]
   ];
 
   return productPickingList.map(products => {

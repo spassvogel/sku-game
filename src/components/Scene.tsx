@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback, useContext, useMemo } from "react";
-import { Container, Stage } from '@inlet/react-pixi';
+import { Container, Stage, Sprite } from '@inlet/react-pixi';
 import { AStarFinder } from "astar-typescript";
 import { TiledMapData, TiledObjectData } from 'constants/tiledMapData';
 import Tilemap from './Tilemap';
@@ -91,7 +91,8 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
 
   const getProductLocation = (productCode: string): { location: [number, number], far: boolean } => {
     const {location} = state.warehouse.boxes[productCode];
-    const far = !!rackFarLocations.find((l) => (l[0] === location[0] && l[1] === location[1]));
+    //const far = !!rackFarLocations.find((l) => (l[0] === location[0] && l[1] === location[1]));
+    const far = false;
     // Some products are considered 'far', it takes longer to pick those
     return {
       location,
@@ -172,6 +173,15 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
     });
   }
 
+  const renderFloorStuff = () => {
+    return (
+      <>
+        <Sprite x={127} y={383} image={`${process.env.PUBLIC_URL}/images/sprites/floor/inbound.png`} />
+        <Sprite x={544} y={383} image={`${process.env.PUBLIC_URL}/images/sprites/floor/outbound.png`} />
+      </>
+    );
+  }
+
   const renderBoxes = () => {
     if (!mapData || !wallLocations.length) return null;
     
@@ -250,17 +260,17 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
         <WarehouseGuy
           name={'guy1'}
           pickingList={pickingList1}  
-          homeLocation={[9, 12]}
+          homeLocation={[17, 12]}
           tileSize={mapData!.tilewidth}
           getProductLocation={getProductLocation}
           dispatch={dispatch}
           aStar={aStar}
-          visible={state.gameState === GameState.pickingBoxes}
+          // visible={state.gameState === GameState.pickingBoxes}
         />
         <WarehouseGuy
           name={'guy2'}
           pickingList={pickingList2}  
-          homeLocation={[10, 12]}
+          homeLocation={[18, 12]}
           tileSize={mapData!.tilewidth}
           getProductLocation={getProductLocation}
           dispatch={dispatch}
@@ -270,7 +280,7 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
         <WarehouseGuy
           name={'guy3'}
           pickingList={pickingList3}  
-          homeLocation={[11, 12]}
+          homeLocation={[19, 12]}
           tileSize={mapData!.tilewidth}
           getProductLocation={getProductLocation}
           dispatch={dispatch}
@@ -298,6 +308,7 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
               setObjects={setObjects}
               setWallLocations={setWallLocations}
             />
+            {renderFloorStuff()}
             {renderBoxes()}
             {renderGuys()}
           </>

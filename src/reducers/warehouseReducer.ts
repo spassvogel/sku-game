@@ -85,34 +85,35 @@ const generateBadBoxLocations = (): { [id: string]: BoxState } => {
 }
 const generateGoodBoxLocations = (): { [id: string]: BoxState } => {
   const inRack = true;
+  const inTrash = true;
+  
   return {
-    "IRN 590": { location: [9, 9], inRack },
-    "CAM 679": { location: [8, 9], inRack },
-    "BAM 223": { location: [7, 9], inRack },
-    "SMK 019": { location: [5, 9], inRack },
-    "BAT 917": { location: [4, 9], inRack },
-    "DLA 413": { location: [11, 9], inRack },
-    "VAC 082": { location: [12, 9], inRack },
-    "VIR 555": { location: [13, 9], inRack },
-    "PTV 555": { location: [15, 9], inRack },
-    "SPK 876": { location: [16, 9], inRack },
-    "MWO 901": { location: [4, 6], inRack },
-    "OTV 482": { location: [5, 6], inRack },
-    "MIC 099": { location: [7, 6], inRack },
-    "DSC 743": { location: [8, 6], inRack },
-    "WSH 322": { location: [9, 6], inRack },
-    "RFG 411": { location: [11, 6], inRack },
-    "TPH 255": { location: [12, 6], inRack },
-    "CST 964": { location: [13, 6], inRack },
-    "SMX 041": { location: [15, 6], inRack },
+    // fast movers
+    "IRN 590": { location: [16, 8], inRack },
+    "CAM 679": { location: [17, 8], inRack },
+    "BAT 917": { location: [16, 6], inRack },
+    "SMK 019": { location: [16, 6], inRack },
+    // medium movers
+    "VRL 444": { location: [11, 8], inRack },    
+    "PTV 555": { location: [11, 6], inRack },
+    "SPK 876": { location: [12, 6], inRack },
+
+    // slow movers
+    "WSH 322": { location: [6, 8], inRack },
+    "SMX 041": { location: [7, 8], inRack },
+    "RFG 411": { location: [6, 6], inRack },
+
+    // non movers (trash)
+    "TPH 255": { location: [1, 6], inTrash },
+    "CST 964": { location: [1, 8], inTrash },
   };
 }
 
 export const initialWarehouseState: WarehouseState = {
-  boxes: generateBoxLocationsAtDock()
+  // boxes: generateBoxLocationsAtDock()
   // boxes: generateBoxLocationsAtRacks()
   // boxes: generateBadBoxLocations()
-  // boxes: generateGoodBoxLocations()
+  boxes: generateGoodBoxLocations()
 }
 
 
