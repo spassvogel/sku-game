@@ -1,4 +1,4 @@
-import React, { useState, useEffect, forwardRef, useRef } from 'react';
+import React, { useState, useEffect, forwardRef, useRef, memo } from 'react';
 import { useApp, useTick, Container, Text } from "@inlet/react-pixi";
 import * as PIXI from 'pixi.js';
 import SpriteAnimated from './SpriteAnimated';
@@ -111,5 +111,5 @@ const Guy = forwardRef<PIXI.Container, any>((props: Props & React.ComponentProps
 // const areEqual = (a: React.ComponentProps<typeof Container>, b: React.ComponentProps<typeof Container>) => {
 //   return true;
 // }
-// export default memo(Guy, () => (true));
-export default Guy;
+export default memo(Guy);
+

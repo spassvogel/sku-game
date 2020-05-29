@@ -1,1 +1,1 @@
-export const SPEED_MULTIPLIER = 10;
+export const SPEED_MULTIPLIER = 5;

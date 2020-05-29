@@ -265,7 +265,7 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
           getProductLocation={getProductLocation}
           dispatch={dispatch}
           aStar={aStar}
-          // visible={state.gameState === GameState.pickingBoxes}
+          visible={state.gameState === GameState.pickingBoxes}
         />
         <WarehouseGuy
           name={'guy2'}

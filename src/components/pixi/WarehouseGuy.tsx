@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, memo } from 'react';
 import * as PIXI from 'pixi.js';
 import Guy from './Guy';
 import { AnyAction } from 'components/context/AppProvider';
@@ -44,15 +44,15 @@ const WarehouseGuy = (props: Props & React.ComponentProps<typeof Guy>) => {
   useEffect(() => {
     if (!guyRef.current || !pickingList) return;
 
-
-    const { orderNo } = pickingList;
+    const { orderNo, products } = pickingList;
     
     //console.log(`[${props.name}] picking list: `, pickingList.products.find(value => !pickedProducts.includes(value)) )
    
-    const productCode = pickingList.products.find(value => !(pickingList.pickedProducts || []).includes(value));
+    const productCode = products.find(value => !(pickingList.pickedProducts || []).includes(value));
+
     const destination = (productCode || 'home');
     if (currentDestination.current && (currentDestination.current === destination)) {
-      //console.log(`[${props.name}] was already underway to ${productCode} ${currentDestination.current}`)
+      // if (destination === 'home') console.log(`[${props.name}] was already underway to ${destination} ${productCode} ${currentDestination.current}`)
       // todo: this is to prevent the guy from starting another animation when another guy picks up a boxes
       // Would be better to useMemo or something but cba now
       return;
@@ -96,10 +96,11 @@ const WarehouseGuy = (props: Props & React.ComponentProps<typeof Guy>) => {
     } 
     else {
       // All done with this order, return home
-      //console.log(`[${props.name}] I guess we are done. Time to return to ${homeLocation}`);
+      // console.log(`[${props.name}] I guess we are done. Time to return to ${homeLocation}`);
         
       // Determine the path home
       const path = aStar?.findPath(pathStartLocation, convertLocation(homeLocation)) || [];
+      console.log(path);
       
       // create animation to walk this path
       path.forEach((loc: number[]) => {
@@ -138,5 +139,4 @@ const WarehouseGuy = (props: Props & React.ComponentProps<typeof Guy>) => {
 // const areEqual = (a: React.ComponentProps<typeof Container>, b: React.ComponentProps<typeof Container>) => {
 //   return true;
 // }
-// export default memo(Guy, () => (true));
-export default WarehouseGuy;
+export default memo(WarehouseGuy);

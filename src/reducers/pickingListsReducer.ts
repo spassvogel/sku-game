@@ -13,8 +13,8 @@ export const generateInitialPickingLists = (): PickingList[] => {
   const productPickingList = [
     ["IRN 590", "CAM 679"],
     ["CAM 679", "VRL 444", "IRN 590"],
-    ["VRL 444", "SMK 019", "BAT 917", "SPK 876", "PTV 555"],
     ["RFG 411", "IRN 590", "CAM 679"],
+    ["VRL 444", "SMK 019", "BAT 917", "SPK 876", "PTV 555"],
     ["SMX 041", "PTV 555", "SPK 876", "CAM 679"],
     ["BAT 917", "SMK 019", "IRN 590", "WSH 322"]
   ];
