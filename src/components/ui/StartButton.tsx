@@ -9,7 +9,6 @@ const StartButton = () => {
   const handleClick = () => {
     switch (state.gameState) {
       case GameState.placingBoxes:
-        console.log(state.warehouse.boxes);
         const allBoxedPlaced = !Object.values(state.warehouse.boxes).some(b => !(b.inRack || b.inTrash));
         if(!allBoxedPlaced) {
           dispatch({ type: 'setStatusText', text: "First place all goods in the warehouse!"});
