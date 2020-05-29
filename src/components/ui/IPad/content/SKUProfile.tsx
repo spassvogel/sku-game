@@ -48,7 +48,7 @@ const SKUProfile = (props: Props) => {
       <tr key={row.productCode} data-code={row.productCode}>
         <td>{row.productCode}</td>
         <td>{row.description}</td>
-        <td>{row.slotting || ""}</td>
+        {/* <td>{row.slotting || ""}</td> */}
       </tr>
     )
   }

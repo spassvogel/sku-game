@@ -2,7 +2,8 @@ import { initialWMSState } from "./wmsReducer";
 
 export interface BoxState {
   location: [number, number];
-  inRack?: boolean; // true if in a rack, false if in a dock
+  inRack?: boolean; // true if in a rack
+  inTrash?: boolean; // true if in trash
 }
 
 export interface WarehouseState {
@@ -14,7 +15,7 @@ const generateBoxLocationsAtDock = () => {
   products.sort(() => (0.5 - Math.random()));
   return products.reduce((acc: { [id: string]: BoxState }, value: string, index: number) => {
     acc[value] = { 
-      location: [1 + index, 1]
+      location: [8 + index, 1]
     }
     return acc;
   }, {});
@@ -116,19 +117,22 @@ export const initialWarehouseState: WarehouseState = {
 
 
 export type WarehouseAction =
- | { type: 'placeBox'; productCode: string, location: [number, number], inRack: boolean }
+ | { type: 'placeBox'; productCode: string, location: [number, number], destinationType: string }
  | { type: 'restart' };
 
 export const warehouseReducer = (state: WarehouseState, action: WarehouseAction) => {
   switch (action.type) {
     case 'placeBox':
-      const { location, inRack } = action; 
+      const { location, destinationType } = action; 
+      const inRack = destinationType === "rack";
+      const inTrash = destinationType === "trash";
       const boxes = { 
         ...state.boxes,
         [action.productCode]: {
             ...state.boxes[action.productCode],
             location,
-            inRack
+            inRack,
+            inTrash
         }
       }
       return { 

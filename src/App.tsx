@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import './App.css';
 import Scene from 'components/Scene';
 import * as PIXI  from 'pixi.js';
-import { Stage } from '@inlet/react-pixi';
 import IPad from 'components/ui/IPad';
 import StartButton from 'components/ui/StartButton';
 import { AppProvider } from 'components/context/AppProvider';
@@ -23,7 +22,7 @@ function App() {
       <div className="App">
         <Settings />
         <Scene 
-          tilemap="scenes/level1.json" 
+          tilemap="scenes/level2.json" 
           width={width} 
           height={height}
           onProductClick={setSelectedProduct}

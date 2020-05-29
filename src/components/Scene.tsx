@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback, useContext, useMemo } from "react";
 import { Container, Stage } from '@inlet/react-pixi';
 import { AStarFinder } from "astar-typescript";
-import { TiledMapData } from 'constants/tiledMapData';
+import { TiledMapData, TiledObjectData } from 'constants/tiledMapData';
 import Tilemap from './Tilemap';
 import BridgedStage from "./pixi/util/BridgedStage";
 import { AppContext } from "./context/AppProvider";
@@ -34,9 +34,7 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
   const {warehouse} = state;
 
   const [mapData, setMapData] = useState<TiledMapData>();
-  const [rackLocations, setRackLocations] = useState<[number, number][]>([]);
-  const [rackFarLocations, setRackFarLocations] = useState<[number, number][]>([]); // the racks that are considered 'far'
-  const [dockLocations, setDockLocations] = useState<[number, number][]>([]);
+  const [objects, setObjects] = useState<{[key: string]: TiledObjectData}>();
   const [wallLocations, setWallLocations] = useState<[number, number][]>([]);
   const [selectedBox, setSelectedBox] = useState<string>();
   const ref = useRef<PIXI.Container>(null);
@@ -66,17 +64,30 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
     }
   }, [state.gameState, state.muted])
 
-  /** Returns the location of the rack at given location 
-   *  The tile south of a rack counts too. When no rack is found
-   * returns undefined */
-  const getRackAtLocation = useCallback((location: [number, number]) => {
-    // Racks are two tiles high but the box is placed at the top tile
-    return rackLocations.find((l) => (l[0] === location[0] && l[1] === location[1]))
-  }, [rackLocations]);
 
+  const getObject = useCallback((location: [number, number]) => {
+    return objects?.[`${location[0]},${location[1]}`];
+  }, [objects]);
+
+  /** Returns the object if a rack is at given location */
+  const getRackAtLocation = useCallback((location: [number, number]) => {
+    // 
+    const object = getObject(location);
+    const isRack = object?.properties?.some(p => p.name === 'rack' && p.value);
+    if (isRack) {
+      return object;
+    }
+  }, [getObject]);
+
+  /** Returns the object if a rack is at given location */
   const getDockAtLocation = useCallback((location: [number, number]) => {
-    return dockLocations.find((l) => (l[0] === location[0] && l[1] === location[1]))
-  }, [dockLocations]);
+    // 
+    const object = getObject(location);
+    const isDock = object?.properties?.some(p => p.name === 'dock' && p.value);
+    if (isDock) {
+      return object;
+    }
+  }, [getObject]);
 
   const getProductLocation = (productCode: string): { location: [number, number], far: boolean } => {
     const {location} = state.warehouse.boxes[productCode];
@@ -113,11 +124,11 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
     const position = event.data.global;
     const location = pointToSceneLocation(position); // tile location
 
-    const rackLocation = getRackAtLocation(location) || getDockAtLocation(location);
-
+    const object = getObject(location);
+    const isRack = object?.type === "rack";
     let tint = 0xFFFFFF;
-    if (rackLocation) {
-      const otherBoxName = getBoxNameAtLocation(rackLocation);
+    if (isRack) {
+      const otherBoxName = getBoxNameAtLocation(location);
       if (!otherBoxName || otherBoxName === productCode) {
         tint = 0x00FF30; // Can drop here
       } else {
@@ -133,15 +144,14 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
 
     setTint(event.currentTarget, 0xFFFFFF);
 
-    const rackLocation = getRackAtLocation(location);
-    const dockLocation = getDockAtLocation(location);
-    const rackOrDockLoc = rackLocation || dockLocation;
-    if (rackOrDockLoc) {
-      const otherBoxName = getBoxNameAtLocation(rackOrDockLoc);
+    const object = getObject(location);
+
+    if (object) {
+      const otherBoxName = getBoxNameAtLocation(location);
       if (!otherBoxName || otherBoxName === productCode) {
-        const inRack = !!rackLocation;
+
         if (otherBoxName !== productCode && !state.muted) sound.play('snap'); 
-        dispatch({ type: 'placeBox', productCode, location: rackOrDockLoc!, inRack});
+        dispatch({ type: 'placeBox', productCode, location, destinationType: object.type});
         return;
       }
     }
@@ -285,9 +295,7 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
             <Tilemap 
               basePath={basePath} 
               data={mapData} 
-              setRackLocations={setRackLocations}
-              setRackFarLocations={setRackFarLocations}
-              setDockLocations={setDockLocations}
+              setObjects={setObjects}
               setWallLocations={setWallLocations}
             />
             {renderBoxes()}

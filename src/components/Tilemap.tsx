@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TiledMapData, TiledLayerData, TiledTilesetData } from 'constants/tiledMapData';
+import { TiledMapData, TiledLayerData, TiledTilesetData, TiledLayerType, TiledObjectData } from 'constants/tiledMapData';
 import { Container, Text, Graphics } from '@inlet/react-pixi';
 import { useEffect } from 'react';
 import { SpritesheetData, SpriteData } from 'constants/spritesheetData';
@@ -9,9 +9,7 @@ import * as PIXI from 'pixi.js';
 interface Props {
   basePath: string;
   data: TiledMapData;
-  setRackLocations: (tiles: [number, number][]) => void;
-  setRackFarLocations: (tiles: [number, number][]) => void;
-  setDockLocations: (tiles: [number, number][]) => void;
+  setObjects: (data: {[key: string]: TiledObjectData}) => void;
   setWallLocations: (tiles: [number, number][]) => void;
 }
 
@@ -21,9 +19,7 @@ const Tilemap = (props: Props) => {
   const {
     basePath, 
     data, 
-    setRackLocations, 
-    setRackFarLocations, 
-    setDockLocations, 
+    setObjects,
     setWallLocations
   } = props;
   const [layers, setLayers] = useState<JSX.Element[]>();
@@ -39,13 +35,9 @@ const Tilemap = (props: Props) => {
     const wallLocations: [number, number][] = [];
 
     spritesheet.parse(() => {
-      // Rack tiles are marked on the tileset with property 'rack'
-      const rackTileIds = tileset.tiles?.filter(tile => tile.properties?.some(p => p.name === 'rack' && p.value)).map(t => t.id);
-      const rackFarTileIds = tileset.tiles?.filter(tile => tile.properties?.some(p => p.name === 'far' && p.value)).map(t => t.id);
-      const dockTileIds = tileset.tiles?.filter(tile => tile.properties?.some(p => p.name === 'dock' && p.value)).map(t => t.id);
       const layers = data.layers.filter(layer => layer.visible).map(layer => {
 
-        // walls are marked on the layer with property 'wall'
+        // walls are marked on the tileset with property 'wall'
         if (layer.properties && layer.properties.some(p => p.name === 'wall' && p.value === true)){
           addAllTilesInLayerToList(wallLocations, layer, layer.width);
         }
@@ -54,33 +46,19 @@ const Tilemap = (props: Props) => {
       });
 
       // The racks are placed in a special layer with property 'racks'
-      const placeholderLayer = data.layers.find(layer => layer.properties?.some(p => p.name === 'placeholders' && p.value));
-      if (placeholderLayer) {
-        const rackLocations: [number, number][] = [];
-        const rackFarLocations: [number, number][] = [];
-        const dockLocations: [number, number][] = [];
-
-        placeholderLayer.data.forEach((id, index) => {         
-          if(rackTileIds && rackTileIds.some(rtId => rtId === id - tileset.firstgid)){
-            const x = (index % placeholderLayer.width);
-            const y = Math.floor(index / placeholderLayer.width);
-            rackLocations.push([x, y]);  
-          }
-          if(rackFarTileIds && rackFarTileIds.some(rtId => rtId === id - tileset.firstgid)){
-            const x = (index % placeholderLayer.width);
-            const y = Math.floor(index / placeholderLayer.width);
-            rackFarLocations.push([x, y]);  
-          }
-          if(dockTileIds && dockTileIds.some(rtId => rtId === id - tileset.firstgid)){
-            const x = (index % placeholderLayer.width);
-            const y = Math.floor(index / placeholderLayer.width);
-            dockLocations.push([x, y]);  
-          }
-
-          setRackLocations(rackLocations);
-          setRackFarLocations(rackFarLocations);
-          setDockLocations(dockLocations);
-        });
+      const objectLayer = data.layers.find(layer => layer.type === TiledLayerType.objectgroup);
+      if (objectLayer) {
+    
+        const objects: { [key: string]: TiledObjectData } = objectLayer.objects.reduce((acc: {[key: string]: TiledObjectData}, value: TiledObjectData) => {
+          const {x, y} = value;
+          const location = [
+            x / data.tilewidth, 
+            y / data.tileheight - 1
+          ];
+          acc[`${location[0]},${location[1]}`] = value;
+          return acc;
+        }, {});
+        setObjects(objects);
       }
       setWallLocations(wallLocations);
       setLayers(layers);
@@ -90,7 +68,7 @@ const Tilemap = (props: Props) => {
       }
     });
 
-  }, [basePath, data, setRackLocations, setDockLocations, setWallLocations]);
+  }, [basePath, data, setObjects, setWallLocations]);
   return (
     <Container >
       {layers}

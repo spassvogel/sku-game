@@ -33,7 +33,9 @@ export interface TileData {
 }
 
 export interface TiledLayerData {
-  data: Array<number>;
+  data: number[];
+  objects: TiledObjectData[];
+  type: TiledLayerType;
   height: number;
   id: number;
   name: string;
@@ -42,7 +44,25 @@ export interface TiledLayerData {
   x: number;
   y: number;
   width: number;
-  properties?: TiledProperty[];
+  properties?: TiledProperty[];  
+}
+
+export interface TiledObjectData {
+  gid: number;
+  id: number;
+  name: string;
+  properties?: TiledProperty[];  
+  type: string;
+  visible: boolean;
+  width: number;
+  height: number;
+  x: number;
+  y: number;
+}
+
+export enum TiledLayerType {
+    tilelayer = "tilelayer",
+    objectgroup = "objectgroup"
 }
 
 export interface TiledProperty {
