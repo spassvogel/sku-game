@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.2" tiledversion="1.3.4" orientation="orthogonal" renderorder="right-down" width="21" height="13" tilewidth="32" tileheight="32" infinite="0" nextlayerid="15" nextobjectid="45">
+ <editorsettings>
+  <export target="level2.json" format="json"/>
+ </editorsettings>
+ <tileset firstgid="1" name="sku-tiles" tilewidth="32" tileheight="32" tilecount="40" columns="10">
+  <image source="tilesets/sku-tiles.png" width="320" height="128"/>
+ </tileset>
+ <layer id="1" name="Floor" width="21" height="13">
+  <data encoding="csv">
+39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,
+39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,
+39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,
+40,40,40,26,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+40,40,40,26,0,26,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+40,40,40,26,25,26,25,25,25,26,25,25,26,26,26,25,26,26,25,26,0,
+40,40,40,26,26,26,25,26,25,25,26,26,25,26,25,25,25,25,25,26,0,
+40,40,40,25,25,25,26,25,25,25,26,25,26,26,25,25,25,25,26,26,0,
+40,40,40,26,25,26,26,26,26,25,26,26,25,26,26,26,26,25,25,26,0,
+40,40,40,25,26,26,25,26,25,26,25,25,25,25,25,25,25,26,26,26,0,
+40,40,40,0,26,26,26,25,26,25,26,26,25,26,25,26,26,25,25,26,0,
+40,40,40,0,26,25,26,25,26,0,26,26,26,25,26,25,26,25,26,25,0,
+40,40,40,0,25,25,25,26,25,0,0,0,0,0,0,0,0,25,25,25,0
+</data>
+ </layer>
+ <layer id="2" name="Walls" width="21" height="13">
+  <properties>
+   <property name="wall" type="bool" value="true"/>
+  </properties>
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,
+0,0,0,13,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,13,
+0,0,0,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,13,
+0,0,0,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,13,
+0,0,0,13,0,32,2,2,33,0,32,2,2,33,0,32,2,2,33,0,13,
+0,0,0,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,13,
+0,0,0,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,13,
+0,0,0,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,13,
+0,0,0,13,0,0,0,1,2,2,2,2,2,2,2,2,3,0,0,0,13,
+0,0,0,13,0,0,0,13,12,12,12,12,12,12,12,12,13,0,0,0,13
+</data>
+ </layer>
+ <layer id="3" name="Racks" width="21" height="13">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,4,5,5,6,0,4,5,5,6,0,4,5,5,6,0,0,
+0,0,0,0,0,4,5,5,6,0,4,5,5,6,0,4,5,5,6,0,0,
+0,0,0,0,0,14,15,15,16,0,14,15,15,16,0,14,15,15,16,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer id="12" name="RackPlaceholders" width="21" height="13">
+  <properties>
+   <property name="placeholders" type="bool" value="true"/>
+  </properties>
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <objectgroup id="14" name="Objects">
+  <object id="13" type="rack" gid="38" x="192" y="224" width="32" height="32">
+   <properties>
+    <property name="zone" value="C"/>
+   </properties>
+  </object>
+  <object id="14" type="rack" gid="38" x="224" y="224" width="32" height="32">
+   <properties>
+    <property name="zone" value="C"/>
+   </properties>
+  </object>
+  <object id="17" type="rack" gid="38" x="192" y="288" width="32" height="32">
+   <properties>
+    <property name="zone" value="C"/>
+   </properties>
+  </object>
+  <object id="18" type="rack" gid="38" x="224" y="288" width="32" height="32">
+   <properties>
+    <property name="zone" value="C"/>
+   </properties>
+  </object>
+  <object id="19" type="rack" gid="38" x="352" y="224" width="32" height="32">
+   <properties>
+    <property name="zone" value="B"/>
+   </properties>
+  </object>
+  <object id="20" type="rack" gid="38" x="384" y="224" width="32" height="32">
+   <properties>
+    <property name="zone" value="B"/>
+   </properties>
+  </object>
+  <object id="21" type="rack" gid="38" x="352" y="288" width="32" height="32">
+   <properties>
+    <property name="zone" value="B"/>
+   </properties>
+  </object>
+  <object id="22" type="rack" gid="38" x="384" y="288" width="32" height="32">
+   <properties>
+    <property name="zone" value="B"/>
+   </properties>
+  </object>
+  <object id="23" type="rack" gid="38" x="512" y="224" width="32" height="32">
+   <properties>
+    <property name="zone" value="B"/>
+   </properties>
+  </object>
+  <object id="24" type="rack" gid="38" x="544" y="224" width="32" height="32">
+   <properties>
+    <property name="zone" value="B"/>
+   </properties>
+  </object>
+  <object id="25" type="rack" gid="38" x="512" y="288" width="32" height="32">
+   <properties>
+    <property name="zone" value="B"/>
+   </properties>
+  </object>
+  <object id="26" type="rack" gid="38" x="544" y="288" width="32" height="32">
+   <properties>
+    <property name="zone" value="B"/>
+   </properties>
+  </object>
+  <object id="27" type="dock" gid="38" x="608" y="64" width="32" height="32"/>
+  <object id="28" type="dock" gid="38" x="576" y="64" width="32" height="32"/>
+  <object id="29" type="dock" gid="38" x="544" y="64" width="32" height="32"/>
+  <object id="30" type="dock" gid="38" x="448" y="64" width="32" height="32"/>
+  <object id="31" type="dock" gid="38" x="480" y="64" width="32" height="32"/>
+  <object id="32" type="dock" gid="38" x="512" y="64" width="32" height="32"/>
+  <object id="33" type="dock" gid="38" x="416" y="64" width="32" height="32"/>
+  <object id="34" type="dock" gid="38" x="384" y="64" width="32" height="32"/>
+  <object id="35" type="dock" gid="38" x="352" y="64" width="32" height="32"/>
+  <object id="36" type="trash" gid="38" x="32" y="320" width="32" height="32">
+   <properties>
+    <property name="zone" value="D"/>
+   </properties>
+  </object>
+  <object id="37" type="dock" gid="38" x="288" y="64" width="32" height="32"/>
+  <object id="38" type="dock" gid="38" x="320" y="64" width="32" height="32"/>
+  <object id="39" type="dock" gid="38" x="256" y="64" width="32" height="32"/>
+  <object id="40" type="trash" gid="38" x="32" y="288" width="32" height="32">
+   <properties>
+    <property name="zone" value="D"/>
+   </properties>
+  </object>
+  <object id="41" type="trash" gid="38" x="32" y="256" width="32" height="32">
+   <properties>
+    <property name="zone" value="D"/>
+   </properties>
+  </object>
+  <object id="42" type="trash" gid="38" x="32" y="224" width="32" height="32">
+   <properties>
+    <property name="zone" value="D"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <layer id="13" name="Details" width="21" height="13">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+20,20,20,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,10,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,18,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,18,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,18,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,18,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer id="7" name="TopDockZone" width="21" height="13">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,7,8,8,8,8,8,8,8,8,8,8,9,0,
+0,0,0,0,0,0,0,0,17,18,18,18,18,18,18,18,18,18,18,19,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,18,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+</map>
