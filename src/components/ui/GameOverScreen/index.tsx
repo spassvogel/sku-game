@@ -45,6 +45,8 @@ const GameOverScreen = () => {
     )
   }
 
+  
+
   return (
     <div className="gameover-screen">
       <div className="text">
