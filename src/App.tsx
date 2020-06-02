@@ -30,7 +30,7 @@ function App() {
         <IPad selectedProduct={selectedProduct}/>
         <StartButton />
         <StatusText />
-        {/* <GameOverScreen /> */}
+        <GameOverScreen />
       </div>
     </AppProvider>
   );

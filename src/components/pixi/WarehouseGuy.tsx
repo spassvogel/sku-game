@@ -100,7 +100,6 @@ const WarehouseGuy = (props: Props & React.ComponentProps<typeof Guy>) => {
         
       // Determine the path home
       const path = aStar?.findPath(pathStartLocation, convertLocation(homeLocation)) || [];
-      console.log(path);
       
       // create animation to walk this path
       path.forEach((loc: number[]) => {

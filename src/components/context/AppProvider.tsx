@@ -33,6 +33,7 @@ const reducer = (state: AppState, action: AnyAction) => {
     warehouse: warehouseReducer(state.warehouse, action as WarehouseAction),
     muted: mutedReducer(state.muted, action as MutedReducerAction), // todo: settingsreducer?
     time: timeReducer(state.time, action as TimeReducerAction)
+    
   };
 };
 

@@ -1,9 +1,9 @@
 
 export enum Categories {
-  A,
-  B,
-  C,
-  D
+  A = "A", //these get compared to the zones in the tilemap
+  B = "B",
+  C = "C",
+  D = "D"
 }
 
 export interface WMSData {

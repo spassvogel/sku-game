@@ -150,13 +150,29 @@
   <object id="33" type="dock" gid="38" x="416" y="64" width="32" height="32"/>
   <object id="34" type="dock" gid="38" x="384" y="64" width="32" height="32"/>
   <object id="35" type="dock" gid="38" x="352" y="64" width="32" height="32"/>
-  <object id="36" type="trash" gid="38" x="32" y="320" width="32" height="32"/>
+  <object id="36" type="trash" gid="38" x="32" y="320" width="32" height="32">
+   <properties>
+    <property name="zone" value="D"/>
+   </properties>
+  </object>
   <object id="37" type="dock" gid="38" x="288" y="64" width="32" height="32"/>
   <object id="38" type="dock" gid="38" x="320" y="64" width="32" height="32"/>
   <object id="39" type="dock" gid="38" x="256" y="64" width="32" height="32"/>
-  <object id="40" type="trash" gid="38" x="32" y="288" width="32" height="32"/>
-  <object id="41" type="trash" gid="38" x="32" y="256" width="32" height="32"/>
-  <object id="42" type="trash" gid="38" x="32" y="224" width="32" height="32"/>
+  <object id="40" type="trash" gid="38" x="32" y="288" width="32" height="32">
+   <properties>
+    <property name="zone" value="D"/>
+   </properties>
+  </object>
+  <object id="41" type="trash" gid="38" x="32" y="256" width="32" height="32">
+   <properties>
+    <property name="zone" value="D"/>
+   </properties>
+  </object>
+  <object id="42" type="trash" gid="38" x="32" y="224" width="32" height="32">
+   <properties>
+    <property name="zone" value="D"/>
+   </properties>
+  </object>
  </objectgroup>
  <layer id="13" name="Details" width="21" height="13">
   <data encoding="csv">

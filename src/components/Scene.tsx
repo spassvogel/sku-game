@@ -151,8 +151,9 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
       const otherBoxName = getBoxNameAtLocation(location);
       if (!otherBoxName || otherBoxName === productCode) {
 
-        if (otherBoxName !== productCode && !state.muted) sound.play('snap'); 
-        dispatch({ type: 'placeBox', productCode, location, destinationType: object.type});
+        if (otherBoxName !== productCode && !state.muted) sound.play("snap");
+        const zone = object?.properties?.find(p => p.name === "zone")?.value;
+        dispatch({ type: 'placeBox', productCode, location, zone });
         return;
       }
     }
@@ -245,6 +246,7 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
       setPickingList2(nextPickingList2);
       const nextPickingList3 = state.pickingLists.find((pL, i) => !pL.complete && i % 3 === 2);
       setPickingList3(nextPickingList3);
+      
       if (!nextPickingList1 && !nextPickingList2 && !nextPickingList3) {
         dispatch({ type: 'completeGame' });
       }

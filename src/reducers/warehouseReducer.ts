@@ -2,8 +2,7 @@ import { initialWMSState } from "./wmsReducer";
 
 export interface BoxState {
   location: [number, number];
-  inRack?: boolean; // true if in a rack
-  inTrash?: boolean; // true if in trash
+  zone?: string; // A-C: in rack, D: trash, undefined: dock
 }
 
 export interface WarehouseState {
@@ -53,7 +52,7 @@ const generateBoxLocationsAtRacks = () => {
   return products.reduce((acc: { [id: string]: BoxState }, value: string, index: number) => {
     acc[value] = { 
       location: rackLocations[index],
-      inRack: true
+      zone: "A"
     }
     return acc;
   }, {});
@@ -62,50 +61,49 @@ const generateBoxLocationsAtRacks = () => {
 const generateBadBoxLocations = (): { [id: string]: BoxState } => {
   const inRack = true;
   return {
-    "CST 964": { location: [9, 9], inRack },
-    "TPH 255": { location: [8, 9], inRack },
-    "DSC 743": { location: [7, 9], inRack },
-    "SMX 041": { location: [5, 9], inRack },
-    "RFG 411": { location: [4, 9], inRack },
-    "WSH 322": { location: [11, 9], inRack },
-    "MIC 099": { location: [12, 9], inRack },
-    "OTV 482": { location: [13, 9], inRack },
-    "MWO 901": { location: [15, 9], inRack },
-    "SPK 876": { location: [16, 9], inRack },
-    "PTV 555": { location: [4, 6], inRack },
-    "VIR 555": { location: [5, 6], inRack },
-    "BAT 917": { location: [7, 6], inRack },
-    "VAC 082": { location: [8, 6], inRack },
-    "DLA 413": { location: [9, 6], inRack },
-    "SMK 019": { location: [11, 6], inRack },
-    "BAM 223": { location: [12, 6], inRack },
-    "CAM 679": { location: [13, 6], inRack },
-    "IRN 590": { location: [15, 6], inRack },
+    "CST 964": { location: [9, 9] },
+    "TPH 255": { location: [8, 9] },
+    "DSC 743": { location: [7, 9] },
+    "SMX 041": { location: [5, 9] },
+    "RFG 411": { location: [4, 9] },
+    "WSH 322": { location: [11, 9] },
+    "MIC 099": { location: [12, 9] },
+    "OTV 482": { location: [13, 9] },
+    "MWO 901": { location: [15, 9] },
+    "SPK 876": { location: [16, 9] },
+    "PTV 555": { location: [4, 6] },
+    "VIR 555": { location: [5, 6] },
+    "BAT 917": { location: [7, 6] },
+    "VAC 082": { location: [8, 6] },
+    "DLA 413": { location: [9, 6] },
+    "SMK 019": { location: [11, 6] },
+    "BAM 223": { location: [12, 6] },
+    "CAM 679": { location: [13, 6] },
+    "IRN 590": { location: [15, 6] },
   };
 }
 const generateGoodBoxLocations = (): { [id: string]: BoxState } => {
-  const inRack = true;
-  const inTrash = true;
   
   return {
     // fast movers
-    "IRN 590": { location: [16, 8], inRack },
-    "CAM 679": { location: [17, 8], inRack },
-    "BAT 917": { location: [16, 6], inRack },
-    "SMK 019": { location: [16, 6], inRack },
+    "IRN 590": { location: [16, 8], zone: "A" },
+    "CAM 679": { location: [17, 8], zone: "A" },
+    "BAT 917": { location: [16, 6], zone: "A" },
+    "SMK 019": { location: [16, 6], zone: "A" },
+
     // medium movers
-    "VRL 444": { location: [11, 8], inRack },    
-    "PTV 555": { location: [11, 6], inRack },
-    "SPK 876": { location: [12, 6], inRack },
+    "VRL 444": { location: [11, 8], zone: "B" },    
+    "PTV 555": { location: [11, 6], zone: "B" },
+    "SPK 876": { location: [12, 6], zone: "B" },
 
     // slow movers
-    "WSH 322": { location: [6, 8], inRack },
-    "SMX 041": { location: [7, 8], inRack },
-    "RFG 411": { location: [6, 6], inRack },
+    "WSH 322": { location: [6, 8], zone: "C" },
+    "SMX 041": { location: [7, 8], zone: "C" },
+    "RFG 411": { location: [6, 6], zone: "C" },
 
     // non movers (trash)
-    "TPH 255": { location: [1, 6], inTrash },
-    "CST 964": { location: [1, 8], inTrash },
+    "TPH 255": { location: [1, 6], zone: "D" },
+    "CST 964": { location: [1, 8], zone: "D"},
   };
 }
 
@@ -118,22 +116,19 @@ export const initialWarehouseState: WarehouseState = {
 
 
 export type WarehouseAction =
- | { type: 'placeBox'; productCode: string, location: [number, number], destinationType: string }
+ | { type: 'placeBox'; productCode: string, location: [number, number], zone?: string }
  | { type: 'restart' };
 
 export const warehouseReducer = (state: WarehouseState, action: WarehouseAction) => {
   switch (action.type) {
     case 'placeBox':
-      const { location, destinationType } = action; 
-      const inRack = destinationType === "rack";
-      const inTrash = destinationType === "trash";
+      const { location, zone } = action; 
       const boxes = { 
         ...state.boxes,
         [action.productCode]: {
             ...state.boxes[action.productCode],
             location,
-            inRack,
-            inTrash
+            zone,
         }
       }
       return { 
