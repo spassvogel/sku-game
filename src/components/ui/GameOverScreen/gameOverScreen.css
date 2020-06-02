@@ -3,7 +3,7 @@
   height: calc(100% - 32px);
   position: absolute;
   top: 0;
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.9);
   margin: 16px;
   border-radius: 16px;
   display: flex;
@@ -17,4 +17,9 @@
 .gameover-screen .text .button {
   text-align: center;
   margin-top: 30px;
+}
+
+.gameover-screen .text ul {
+  list-style: none;
+  padding: 0;
 }

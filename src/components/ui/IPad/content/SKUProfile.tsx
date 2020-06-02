@@ -17,12 +17,15 @@ const SKUProfile = (props: Props) => {
     const table = tableRef.current;
     
     // add highlight class 
-    const row = table.querySelector(`tr[data-code="${props.selectedProduct}"]`)
-    row?.classList.add("highlight");
-    row?.scrollIntoView({ block: 'end'});
+    table.querySelectorAll(`tr[data-code="${props.selectedProduct}"]`).forEach(row => {
+      row.classList.add("highlight");
+      row.scrollIntoView({ block: 'end'});
+    });
     return () => {
     // Remove highlight class from prevously highlighted row
-      table.querySelector(".highlight")?.classList.remove("highlight");
+      table.querySelectorAll('.highlight').forEach(row => {
+        row.classList.remove("highlight");
+      });  
     }
   }, [props.selectedProduct]);
 
@@ -52,7 +55,7 @@ const SKUProfile = (props: Props) => {
           {/* <td>{row.slotting || ""}</td> */}
         </tr>
         {row.pair && (
-          <tr>
+          <tr key={`${row.productCode}-pair`} data-code={row.productCode}>
             <td colSpan={2} className="pair">
               {` Frequently sold with ${row.pair}`}
             </td>

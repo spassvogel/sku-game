@@ -19,6 +19,7 @@ const IPad = (props: Props) => {
       case GameState.placingBoxes:
         return <SKUProfile selectedProduct={props.selectedProduct} />;
       case GameState.pickingBoxes:
+      case GameState.complete:
         return <PickingLists />;
     }
   }

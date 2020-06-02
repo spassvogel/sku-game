@@ -89,7 +89,7 @@ const generateGoodBoxLocations = (): { [id: string]: BoxState } => {
     "IRN 590": { location: [16, 8], zone: "A" },
     "CAM 679": { location: [17, 8], zone: "A" },
     "BAT 917": { location: [16, 6], zone: "A" },
-    "SMK 019": { location: [16, 6], zone: "A" },
+    "SMK 019": { location: [17, 6], zone: "A" },
 
     // medium movers
     "VRL 444": { location: [11, 8], zone: "B" },    
