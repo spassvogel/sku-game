@@ -45,7 +45,6 @@ const Tilemap = (props: Props) => {
         return createTileLayer(layer, texture, data.width, tileset, spritesheet);
       });
 
-      // The racks are placed in a special layer with property 'racks'
       const objectLayer = data.layers.find(layer => layer.type === TiledLayerType.objectgroup);
       if (objectLayer) {
     

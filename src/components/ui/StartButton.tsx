@@ -26,7 +26,7 @@ const StartButton = () => {
 
   switch (state.gameState) {
     case GameState.placingBoxes:
-      return <button onClick={handleClick} className="start-button"><h1>Start</h1></button>;
+      return <button onClick={handleClick} className="start-button"><h1>Complete</h1></button>;
     default:
       return null;
   }
