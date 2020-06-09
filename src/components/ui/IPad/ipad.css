@@ -36,7 +36,7 @@
 }
 
 .ipad .content td:first-child {
-  border-left: 3px solid orange;
+  border-left: 3px solid white;
 }
 
 .ipad .content td.pair {
@@ -45,12 +45,16 @@
 }
 
 .ipad .content .highlight {
-  background: #ffcc00;
+  background: lightgrey;
 }
 
 .ipad .content .category-header-a {
   background-color: #eb3223;
   color: white;
+}
+
+.ipad .content .cat-a.highlight td:first-child {
+  border-left: 3px solid  #eb3223;
 }
 
 .ipad .content .category-header-b {

@@ -47,14 +47,20 @@ const SKUProfile = (props: Props) => {
   }
 
   const renderRow = (row: WMSData) => {
+    const categoryClasses = { 
+      [Categories.A]: "cat-a",
+      [Categories.B]: "cat-b",
+      [Categories.C]: "cat-c",
+      [Categories.D]: "cat-d",
+    }
     return (
       <>
-        <tr key={row.productCode} data-code={row.productCode}>
+        <tr key={row.productCode} data-code={row.productCode} className={categoryClasses[row.category]}>
           <td>{row.productCode}</td>
           <td>{row.description}</td>
         </tr>
         {row.pair && (
-          <tr key={`${row.productCode}-pair`} data-code={row.productCode}>
+          <tr key={`${row.productCode}-pair`} data-code={row.productCode} className={categoryClasses[row.category]}>
             <td colSpan={2} className="pair">
               {` Frequently sold with ${row.pair}`}
             </td>
