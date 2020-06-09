@@ -33,13 +33,13 @@ const SKUProfile = (props: Props) => {
     return (
       <table ref={tableRef}>
         <tbody>
-        <tr><td colSpan={2} className="category-header-a">A. Fast-moving</td></tr>
+        <tr><th colSpan={2} className="category-header-a">A. Fast-moving</th></tr>
         {data.filter(row => row.category === Categories.A).map(row => renderRow(row))}
-        <tr><td colSpan={2} className="category-header-b">B. Medium-moving</td></tr>
+        <tr><th colSpan={2} className="category-header-b">B. Medium-moving</th></tr>
         {data.filter(row => row.category === Categories.B).map(row => renderRow(row))}
-        <tr><td colSpan={2} className="category-header-c">C. Slow-moving</td></tr>
+        <tr><th colSpan={2} className="category-header-c">C. Slow-moving</th></tr>
         {data.filter(row => row.category === Categories.C).map(row => renderRow(row))}
-        <tr><td colSpan={2} className="category-header-d">D. Not-moving</td></tr>
+        <tr><th colSpan={2} className="category-header-d">D. Not-moving</th></tr>
         {data.filter(row => row.category === Categories.D).map(row => renderRow(row))}
         </tbody>
       </table>
@@ -52,7 +52,6 @@ const SKUProfile = (props: Props) => {
         <tr key={row.productCode} data-code={row.productCode}>
           <td>{row.productCode}</td>
           <td>{row.description}</td>
-          {/* <td>{row.slotting || ""}</td> */}
         </tr>
         {row.pair && (
           <tr key={`${row.productCode}-pair`} data-code={row.productCode}>

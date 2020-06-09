@@ -3,6 +3,8 @@ import { Sprite, Graphics, Container } from '@inlet/react-pixi';
 import * as PIXI from 'pixi.js';
 import { PixiPlugin } from 'gsap/all';
 import { gsap } from 'gsap'
+import { WMSData } from 'reducers/wmsReducer';
+import { CategoryColors } from 'constants/gameSettings';
 
 PixiPlugin.registerPIXI(PIXI);
 gsap.registerPlugin(PixiPlugin);
@@ -10,6 +12,7 @@ gsap.registerPlugin(PixiPlugin);
 interface Props {
   position?: PIXI.Point;
   location?: [number, number];
+  product: WMSData;
   tileWidth: number;
   tileHeight: number;
   selected: boolean;
@@ -97,7 +100,7 @@ const Box = (props: Props & React.ComponentProps<typeof Container>) => {
       {selected && (
         <Graphics draw={(graphics:PIXI.Graphics) => {
             const line = 2;
-            const color = 0xffcc00;
+            const color = CategoryColors[props.product.category];
             // const color = 0xbada55;
             graphics.clear();
             graphics.lineStyle(line, color);

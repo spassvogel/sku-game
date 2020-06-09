@@ -185,22 +185,26 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
 
   const renderBoxes = () => {
     if (!mapData || !wallLocations.length) return null;
-    
-    return Object.entries(warehouse.boxes).map(([name, box]) => (
-      <Box 
-        location={box.location} 
-        tileWidth={mapData.tilewidth} 
-        tileHeight={mapData.tileheight}
-        selected={name === selectedBox}
-        onClick={(event) => handleClick(name, event)}
-        onDragged={(event) => handleDragged(name, event)}
-        onReleased={(event) => handleBoxDragEnd(name, event)}
-        key={name}
-        behindWall={isNorthOfWall(box.location, wallLocations)}
-        interactive={state.gameState === GameState.placingBoxes}
-      />
-    ));
-  }
+
+    return Object.entries(warehouse.boxes).map(([productCode, box]) => {
+      const wmsData = state.wms.find(d => d.productCode === productCode)!;
+      return (
+        <Box 
+          location={box.location}
+          product={wmsData}
+          tileWidth={mapData.tilewidth} 
+          tileHeight={mapData.tileheight}
+          selected={productCode === selectedBox}
+          onClick={(event) => handleClick(productCode, event)}
+          onDragged={(event) => handleDragged(productCode, event)}
+          onReleased={(event) => handleBoxDragEnd(productCode, event)}
+          key={productCode}
+          behindWall={isNorthOfWall(box.location, wallLocations)}
+          interactive={state.gameState === GameState.placingBoxes}
+        />
+      );
+    });
+  };
 
   /** Returns true if the tile is blocked */
   const locationIsBlocked = useCallback((location: [number, number]) => {
