@@ -17,7 +17,7 @@ const GameOverScreen = () => {
   
   useEffect(() => {
     if (state.gameState === GameState.pickingBoxes) {
-      setTimeout(setShow, 700, true);
+      setTimeout(setShow, 10000, true);
     }
   }, [state.gameState]);
 
