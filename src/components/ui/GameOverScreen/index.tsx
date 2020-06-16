@@ -76,7 +76,7 @@ const GameOverScreen = () => {
       totalScore += points;
       return (
         <Fragment key={pair.toString()}>
-          <div>{`${pair}`}</div>
+          <div>Pair: {`${pair}`}</div>
           <div>Placed next to each other</div>
           <div>{`${points}/3`}</div>
         </Fragment>
@@ -84,7 +84,7 @@ const GameOverScreen = () => {
     }
     return (
       <Fragment key={pair.toString()}>
-        <div>{`${pair}`}</div>
+        <div>Pair: {`${pair}`}</div>
         <div>Not placed next to each other</div>
         <div>{`${points}/3`}</div>
       </Fragment>
