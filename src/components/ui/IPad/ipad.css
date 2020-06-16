@@ -62,12 +62,24 @@
   color: white;
 }
 
+.ipad .content .cat-b.highlight td:first-child {
+  border-left: 3px solid  #254683;
+}
+
 .ipad .content .category-header-c {
   background-color: #f2bd42;
   color: white;
 }
 
+.ipad .content .cat-c.highlight td:first-child {
+  border-left: 3px solid  #f2bd42;
+}
+
 .ipad .content .category-header-d {
   background-color: #b7b7b7;
   color: white;
+}
+
+.ipad .content .cat-d.highlight td:first-child {
+  border-left: 3px solid  #b7b7b7;
 }

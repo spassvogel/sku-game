@@ -69,25 +69,6 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
     return objects?.[`${location[0]},${location[1]}`];
   }, [objects]);
 
-  /** Returns the object if a rack is at given location */
-  const getRackAtLocation = useCallback((location: [number, number]) => {
-    // 
-    const object = getObject(location);
-    const isRack = object?.properties?.some(p => p.name === 'rack' && p.value);
-    if (isRack) {
-      return object;
-    }
-  }, [getObject]);
-
-  /** Returns the object if a rack is at given location */
-  const getDockAtLocation = useCallback((location: [number, number]) => {
-    // 
-    const object = getObject(location);
-    const isDock = object?.properties?.some(p => p.name === 'dock' && p.value);
-    if (isDock) {
-      return object;
-    }
-  }, [getObject]);
 
   const getProductLocation = (productCode: string): { location: [number, number], far: boolean } => {
     const {location} = state.warehouse.boxes[productCode];
@@ -116,6 +97,13 @@ const Scene = (props: Props & React.ComponentProps<typeof Container>) => {
 
   const handleClick = (productCode: string, event: PIXI.interaction.InteractionEvent) => {
     props.onProductClick(productCode);
+
+    const wmsData = state.wms.find(d => d.productCode === productCode)!;
+
+    dispatch({ 
+      type: 'setStatusText',
+      text: `Selected: ${wmsData.description} (${productCode})`
+    });
 
     setSelectedBox(productCode);
   }
