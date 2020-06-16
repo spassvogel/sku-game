@@ -1,6 +1,6 @@
 import { Categories } from "reducers/wmsReducer";
 
-export const SPEED_MULTIPLIER = 5;
+export const SPEED_MULTIPLIER = 10;
 
 export const CategoryColors = {
   [Categories.A]: 0xeb3223,

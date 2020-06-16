@@ -1,22 +1,83 @@
 .gameover-screen {
-  width: calc(100% - 32px);
-  height: calc(100% - 32px);
+  width: 100%;
+  height: 100%;
   position: absolute;
   top: 0;
-  background: rgba(255, 255, 255, 0.9);
-  margin: 16px;
-  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.85);
+  /* margin: 16px; */
   display: flex;
   align-items: center;
-  justify-content: center;
+  /* justify-content: center; */
+  flex-direction: column;
 }
 
-.gameover-screen .text {
-
+.gameover-screen h1 {
+  color: #fff;
+  margin-top: 6px;
 }
-.gameover-screen .text .button {
+
+.gameover-screen .modal {
+  /* width: calc(100% - 32px);
+  height: calc(100% - 32px); */
+  /* margin:  64px; */
+  border-radius: 16px;
+  background: #FFE6D8;
+  width: 80%;  
+}
+
+.gameover-screen .table div {
+  padding: 8px 16px;
+}
+
+.gameover-screen .table div:nth-child(3n+3) {
+  text-align: right;
+  padding-right: 32px;
+}
+
+.gameover-screen .table .table-header {
+  background: white;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  font-weight: bold;
+}
+
+
+.gameover-screen .table-header:first-of-type {
+  border-top-left-radius: 16px;
+}
+
+.gameover-screen .table-header:nth-of-type(3) {
+  border-top-right-radius: 16px;
+}
+
+.gameover-screen .table .table-footer {
+  background: #AD9B91;
+  color: #fff;
+}
+
+.gameover-screen .table-footer:last-of-type {
+  border-bottom-right-radius: 16px;
+}
+
+.gameover-screen .table-footer:nth-last-of-type(3) {
+  border-bottom-left-radius: 16px;
+}
+
+.gameover-screen .table {
+  display: grid;
+  grid-template-columns: 40% 40% 20%;
+}
+.gameover-screen .button {
   text-align: center;
-  margin-top: 30px;
+  margin-top: 16px;
+  padding: 12px 32px;
+  background: #82BC5D;
+  border: 0;
+  border-radius: 4px;
+  text-transform: uppercase;
+  color: #fff;
+  font-size: larger;
+  font-weight: bold;  
 }
 
 .gameover-screen .text ul {

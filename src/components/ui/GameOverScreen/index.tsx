@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect, useMemo, memo } from "react";
+import { useContext, useState, useEffect, useMemo, memo, Fragment } from "react";
 import React from "react";
 import { GameState } from "reducers/gameStateReducer";
 import { AppContext } from "components/context/AppProvider";
@@ -57,7 +57,11 @@ const GameOverScreen = () => {
     const points = correct * pointsPerProduct;
     totalScore += points;
     return (
-      <li>{`${display} products placed correct = ${points}/${total * pointsPerProduct} points`}</li>
+      <>
+        <div>{`${display} `}</div>
+        <div>{`${total} placed correct`}</div>
+        <div>{`${points}/${total * pointsPerProduct}`}</div>
+      </>
     )
   }
   
@@ -70,9 +74,14 @@ const GameOverScreen = () => {
     if (placedNext) {
       points = 3;
       totalScore += points;
-      return <li>{`Product pair (${pair}) placed near to each other = ${points}/3 points`}</li>
+      return (<Fragment key={pair.toString()}>
+          <div>{`${pair}`}</div>
+          <div>{`${placedNext ? "Placed next to each other" : "Not placed next to each other"}`}</div>
+          <div>{`${points}/3`}</div>
+        </Fragment>
+      )
     }
-    return <li>{`Product pair (${pair}) not placed near to each other = ${points}/3 points`}</li>
+    return <div>{`Product pair (${pair}) not placed near to each other = ${points}/3 points`}</div>
   }
 
   const getBinRow = () => {
@@ -94,31 +103,42 @@ const GameOverScreen = () => {
       }
     });
     totalScore += points;
-    return <li>{`(only) non moving products placed in bin = ${points}/0 points`}</li>
+    return (
+      <>
+        <div>Non moving products</div>
+        <div></div>
+        <div>{`${points}`}</div>
+      </>
+    )
   }
 
   return (
     <div className="gameover-screen">
-      <div className="text">
-        <h1>Complete!</h1>
-        <ul>
+        <h1>Scoreboard</h1>
+      <div className="modal">
+        <div className="table">
+          <div className="table-header">Products</div>
+          <div className="table-header">Result</div>
+          <div className="table-header">Score</div>
+          {getProductRow("Fast moving products", Categories.A)}
+          {getProductRow("Medium moving products", Categories.B)}
+          {getProductRow("Slow moving products", Categories.C)}
           {pairs.map(p => getPairRow(p))}
-          {getProductRow("Fast moving", Categories.A)}
-          {getProductRow("Medium moving", Categories.B)}
-          {getProductRow("Slow moving", Categories.C)}
           {getBinRow()}
-        </ul>
 
-        Your time: {formatTime(state.time)}
-        <div>
-          {`Total score: ${totalScore}/${maxScore}`}
-        </div>
-        <div className="button">
-          <button onClick={handleReset}>
-            Try again?
-          </button>
+          <div className="table-footer">
+          </div>
+          <div className="table-footer">
+            Your time: {formatTime(state.time)}
+          </div>
+          <div className="table-footer">
+            {`Total: ${totalScore}/${maxScore}`}
+          </div>
         </div>
       </div>
+        <button onClick={handleReset} className="button">
+          Try again?
+        </button>
     </div>
   )
 }

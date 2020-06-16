@@ -108,10 +108,10 @@ const generateGoodBoxLocations = (): { [id: string]: BoxState } => {
 }
 
 export const initialWarehouseState: WarehouseState = {
-  // boxes: generateBoxLocationsAtDock()
+  boxes: generateBoxLocationsAtDock()
   // boxes: generateBoxLocationsAtRacks()
   // boxes: generateBadBoxLocations()
-  boxes: generateGoodBoxLocations()
+  // boxes: generateGoodBoxLocations()
 }
 
 
