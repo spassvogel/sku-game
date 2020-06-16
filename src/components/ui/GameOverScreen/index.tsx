@@ -74,14 +74,21 @@ const GameOverScreen = () => {
     if (placedNext) {
       points = 3;
       totalScore += points;
-      return (<Fragment key={pair.toString()}>
+      return (
+        <Fragment key={pair.toString()}>
           <div>{`${pair}`}</div>
-          <div>{`${placedNext ? "Placed next to each other" : "Not placed next to each other"}`}</div>
+          <div>Placed next to each other</div>
           <div>{`${points}/3`}</div>
         </Fragment>
       )
     }
-    return <div>{`Product pair (${pair}) not placed near to each other = ${points}/3 points`}</div>
+    return (
+      <Fragment key={pair.toString()}>
+        <div>{`${pair}`}</div>
+        <div>Not placed next to each other</div>
+        <div>{`${points}/3`}</div>
+      </Fragment>
+    )
   }
 
   const getBinRow = () => {
@@ -132,7 +139,8 @@ const GameOverScreen = () => {
             Your time: {formatTime(state.time)}
           </div>
           <div className="table-footer">
-            {`Total: ${totalScore}/${maxScore}`}
+            Total: 
+            <b>{totalScore}</b>{`/${maxScore}`}
           </div>
         </div>
       </div>
