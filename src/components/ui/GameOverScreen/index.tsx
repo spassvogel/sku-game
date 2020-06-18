@@ -44,7 +44,7 @@ const GameOverScreen = () => {
   const getProductRow = (display: string, category: Categories) => {
     let correct = 0;
     let total = 0;
-    const pointsPerProduct = 1;
+
     state.wms.forEach((value: WMSData) => {
       if (value.category === category) {
         total++;
@@ -54,13 +54,13 @@ const GameOverScreen = () => {
         }
       }
     })
-    const points = correct * pointsPerProduct;
+    const points = correct;
     totalScore += points;
     return (
       <>
         <div>{`${display} `}</div>
-        <div>{`${total} placed correct`}</div>
-        <div>{`${points}/${total * pointsPerProduct}`}</div>
+        <div>{`${points} placed correct`}</div>
+        <div>{`${points}/${total}`}</div>
       </>
     )
   }
@@ -92,13 +92,14 @@ const GameOverScreen = () => {
   }
 
   const getBinRow = () => {
-    let points = 0;
+    const pointPenalty = 5;
+    let mistakes = 0;
     const nonMovers = state.wms.filter(p => p.category === Categories.D);
     // All non movers should be in the bin zone
     nonMovers.forEach(value => {
       const {zone} = state.warehouse.boxes[value.productCode];
       if (zone !== Categories.D.toString()){
-        points -= 5;
+        mistakes++;
       }
     });
     const movers = state.wms.filter(p => p.category !== Categories.D);
@@ -106,14 +107,15 @@ const GameOverScreen = () => {
     movers.forEach(value => {
       const {zone} = state.warehouse.boxes[value.productCode];
       if (zone === Categories.D.toString()){
-        points -= 5;
+        mistakes++;
       }
     });
+    const points = -pointPenalty * mistakes;
     totalScore += points;
     return (
       <>
         <div>Non moving products</div>
-        <div></div>
+        <div>{`${mistakes} mistakes made`}</div>
         <div>{`${points}`}</div>
       </>
     )
@@ -140,7 +142,7 @@ const GameOverScreen = () => {
           </div>
           <div className="table-footer">
             Total: 
-            <b>{totalScore}</b>{`/${maxScore}`}
+            <b>{totalScore}</b>
           </div>
         </div>
       </div>
