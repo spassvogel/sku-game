@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "0310eac5632360449eae3b0a9f2cbeee",
+    "revision": "6c26b822eadc543e726288f770cb665f",
     "url": "/sku-game/index.html"
   },
   {
-    "revision": "9f359a1519887c1a300e",
+    "revision": "51c820376bf5baf340ea",
     "url": "/sku-game/static/css/main.3218fd98.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/sku-game/static/js/2.703ce539.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "9f359a1519887c1a300e",
-    "url": "/sku-game/static/js/main.b6ebf7a4.chunk.js"
+    "revision": "51c820376bf5baf340ea",
+    "url": "/sku-game/static/js/main.0c8da264.chunk.js"
   },
   {
     "revision": "69ed8c1b3fa61035a079",
