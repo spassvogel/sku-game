@@ -26,7 +26,7 @@
 }
 
 .gameover-screen .table div {
-  padding: 8px 16px;
+  padding: 6px 16px;
 }
 
 .gameover-screen .table div:nth-child(3n+3) {
@@ -53,15 +53,31 @@
 .gameover-screen .table .table-footer {
   background: #AD9B91;
   color: #fff;
+  margin-top: 12px;
 }
 
 .gameover-screen .table-footer:last-of-type {
   border-bottom-right-radius: 16px;
+  text-align: right;
 }
 
-.gameover-screen .table-footer:nth-last-of-type(3) {
+.gameover-screen .table-footer:nth-last-of-type(2) {
   border-bottom-left-radius: 16px;
 }
+
+.gameover-screen .table-footer.summary {
+  grid-column: 1 / span 2;
+}
+
+.gameover-screen .table-footer.summary .success {
+  /* color: #82BC5D; */
+}
+
+.gameover-screen .table-footer.summary .fail {
+  color: #eb3223;
+}
+
+
 
 .gameover-screen .table {
   display: grid;

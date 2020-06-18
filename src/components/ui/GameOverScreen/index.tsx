@@ -121,6 +121,21 @@ const GameOverScreen = () => {
     )
   }
 
+  const renderSummary = () => {
+    if (totalScore === maxScore) {
+      return (
+        <span className="success">
+          Good job! You reduced the travel time in the warehouse by choosing the most optimum storage locations for the goods.
+        </span>
+      )
+    }
+    return (
+      <span className="fail">
+        Oh no! The storage locations you chose for the goods are not optimum and increased the travel time in the warehouse.
+      </span>
+    )
+  }
+
   return (
     <div className="gameover-screen">
         <h1>Scoreboard</h1>
@@ -135,11 +150,12 @@ const GameOverScreen = () => {
           {pairs.map(p => getPairRow(p))}
           {getBinRow()}
 
-          <div className="table-footer">
+          <div className="table-footer summary">
+            {renderSummary()}
           </div>
-          <div className="table-footer">
+          {/* <div className="table-footer">
             Your time: {formatTime(state.time)}
-          </div>
+          </div> */}
           <div className="table-footer">
             Total: 
             <b>{totalScore}</b>
