@@ -16,7 +16,7 @@ export interface AppState {
 
 export const initialState: AppState = {
   statusText: "",
-  gameState: GameState.placingBoxes,
+  gameState: GameState.intro,
   wms: initialWMSState,
   pickingLists: generateInitialPickingLists(),
   warehouse: initialWarehouseState,
