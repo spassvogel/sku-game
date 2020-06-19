@@ -108,19 +108,23 @@ const generateGoodBoxLocations = (): { [id: string]: BoxState } => {
 }
 
 export const initialWarehouseState: WarehouseState = {
-  // boxes: generateBoxLocationsAtDock()
+  boxes: generateBoxLocationsAtDock()
   // boxes: generateBoxLocationsAtRacks()
   // boxes: generateBadBoxLocations()
-  boxes: generateGoodBoxLocations()
+  // boxes: generateGoodBoxLocations()
 }
 
 
 export type WarehouseAction =
  | { type: 'placeBox'; productCode: string, location: [number, number], zone?: string }
- | { type: 'restart' };
+ | { type: 'restart' }
+ | { type: 'cheat' };
 
 export const warehouseReducer = (state: WarehouseState, action: WarehouseAction) => {
   switch (action.type) {
+    case 'cheat': {
+      return { boxes: generateGoodBoxLocations() };
+    }
     case 'placeBox':
       const { location, zone } = action; 
       const boxes = { 

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useContext } from "react";
+import React, { useEffect, useRef, useContext, Fragment } from "react";
 import { AppContext } from "components/context/AppProvider";
 import { Categories, WMSData } from "reducers/wmsReducer";
 
@@ -54,7 +54,7 @@ const SKUProfile = (props: Props) => {
       [Categories.D]: "cat-d",
     }
     return (
-      <>
+      <Fragment key={row.productCode}>
         <tr key={row.productCode} data-code={row.productCode} className={categoryClasses[row.category]}>
           <td>{row.productCode}</td>
           <td>{row.description}</td>
@@ -66,7 +66,7 @@ const SKUProfile = (props: Props) => {
             </td>
           </tr>
         )}
-      </>
+      </Fragment>
     )
   }
   return (

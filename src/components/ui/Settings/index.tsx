@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import './settings.css';
 import { AppContext } from "components/context/AppProvider";
 
@@ -7,6 +7,11 @@ const Settings = () => {
 
   const handleMutedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({ type: 'setMuted', value: !e.target.checked})  
+  }
+
+  // @ts-ignore 
+  window.cheat = () => {
+    dispatch({ type: 'cheat' })  
   }
   return (
     <div className="settings">
