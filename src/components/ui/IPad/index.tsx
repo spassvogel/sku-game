@@ -25,7 +25,10 @@ const IPad = (props: Props) => {
   }
 
   return (
-    <div className="ipad">
+    <div 
+      className="ipad"
+      style={{backgroundImage: `url(${process.env.PUBLIC_URL}/images/ui/ipad.png)`}}
+    >
       <div className="content">
         {renderContent()}
       </div>
