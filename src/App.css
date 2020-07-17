@@ -1,6 +1,11 @@
 .App {
   height: 480px;
   width: 960px;
-  position: relative;
+  position: absolute;
+  left: 50%;
+  top: 50%;
   background: lightblue;
+  transform-origin: top left;
+  margin: auto;
+  transform: translate(-50%, -50%);
 }
