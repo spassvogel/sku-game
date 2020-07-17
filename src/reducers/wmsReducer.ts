@@ -6,6 +6,19 @@ export enum Categories {
   D = "D"
 }
 
+export type WMSAction =
+ | { type: 'setWMS', wms: WMSData[] };
+
+
+export const wmsReducer = (state: WMSData[], action: WMSAction ) => {
+  switch (action.type) {
+    case 'setWMS':
+      return action.wms;
+    default:
+      return state;
+  }
+}
+
 export interface WMSData {
   category: Categories;
   productCode: string;

@@ -2,7 +2,7 @@
   "name": "sku-game22",
   "version": "0.1.0",
   "private": true,
-  "homepage2": "https://spassvogel.github.io/sku-game",
+  "homepage-github": "https://spassvogel.github.io/sku-game",
   "homepage": "./",
   "dependencies": {
     "@inlet/react-pixi": "^2.0.1",
@@ -26,6 +26,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "build:player": "REACT_APP_PLAYER_MODE=true react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",

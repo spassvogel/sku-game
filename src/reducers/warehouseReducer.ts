@@ -1,4 +1,4 @@
-import { initialWMSState } from "./wmsReducer";
+import { initialWMSState, WMSData } from "./wmsReducer";
 
 export interface BoxState {
   location: [number, number];
@@ -9,8 +9,8 @@ export interface WarehouseState {
   boxes: { [id: string]: BoxState }
 }
 
-const generateBoxLocationsAtDock = () => {
-  const products = initialWMSState.map(p => p.productCode);
+export const generateBoxLocationsAtDock = (wmsState: WMSData[]) => {
+  const products = wmsState.map(p => p.productCode);
   products.sort(() => (0.5 - Math.random()));
   return products.reduce((acc: { [id: string]: BoxState }, value: string, index: number) => {
     acc[value] = { 
@@ -108,7 +108,7 @@ const generateGoodBoxLocations = (): { [id: string]: BoxState } => {
 }
 
 export const initialWarehouseState: WarehouseState = {
-  boxes: generateBoxLocationsAtDock()
+  boxes: generateBoxLocationsAtDock(initialWMSState)
   // boxes: generateBoxLocationsAtRacks()
   // boxes: generateBadBoxLocations()
   // boxes: generateGoodBoxLocations()
@@ -120,7 +120,7 @@ export type WarehouseAction =
  | { type: 'restart' }
  | { type: 'cheat' };
 
-export const warehouseReducer = (state: WarehouseState, action: WarehouseAction) => {
+export const warehouseReducer = (state: WarehouseState, action: WarehouseAction, wmsState: WMSData[]) => {
   switch (action.type) {
     case 'cheat': {
       return { boxes: generateGoodBoxLocations() };
@@ -140,7 +140,9 @@ export const warehouseReducer = (state: WarehouseState, action: WarehouseAction)
         boxes
       } ;
     case 'restart':
-      return initialWarehouseState;  
+      return {
+        boxes: generateBoxLocationsAtDock(wmsState)
+      };  
     default: {
         return state;
     }

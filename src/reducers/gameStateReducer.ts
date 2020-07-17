@@ -7,6 +7,7 @@ export enum GameState {
 }
 
 export type GameStateAction =
+ | { type: 'intro'}
  | { type: 'startGame'}
  | { type: 'startPicking' }
  | { type: 'completeGame' }
@@ -14,6 +15,8 @@ export type GameStateAction =
 
 export const gameStateReducer = (state: GameState, action: GameStateAction ) => {
   switch (action.type) {
+    case 'intro':
+      return GameState.intro;
     case 'startGame':
       return GameState.placingBoxes;
     case 'startPicking':

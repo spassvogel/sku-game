@@ -8,18 +8,20 @@ export interface PickingList {
   orderNo: string;
 }
 
-export const generateInitialPickingLists = (): PickingList[] => {
-  // the actual products are not random, but the rest of the data is
-  const productPickingList = [
-    ["IRN 590", "CAM 679"],
-    ["CAM 679", "VRL 444", "IRN 590"],
-    ["RFG 411", "IRN 590", "CAM 679"],
-    ["VRL 444", "SMK 019", "BAT 917", "SPK 876", "PTV 555"],
-    ["SMX 041", "PTV 555", "SPK 876", "CAM 679"],
-    ["BAT 917", "SMK 019", "IRN 590", "WSH 322"]
-  ];
+export const initialProductPickingList = [
+  ["IRN 590", "CAM 679"],
+  ["CAM 679", "VRL 444", "IRN 590"],
+  ["RFG 411", "IRN 590", "CAM 679"],
+  ["VRL 444", "SMK 019", "BAT 917", "SPK 876", "PTV 555"],
+  ["SMX 041", "PTV 555", "SPK 876", "CAM 679"],
+  ["BAT 917", "SMK 019", "IRN 590", "WSH 322"]
+];
 
-  return productPickingList.map(products => {
+
+
+export const generateInitialPickingLists = (initial: string[][]): PickingList[] => {
+  // the actual products are not random, but the rest of the data is
+  return initial.map(products => {
     return {
       orderNo: Math.random().toString().slice(2, 9),
       products
@@ -28,6 +30,7 @@ export const generateInitialPickingLists = (): PickingList[] => {
 }
 
 export type PickingListsAction =
+ | { type: 'setPickingLists', pickingLists: PickingList[] }
  | { type: 'startPicking', guy: number, orderNo: string }
  | { type: 'completeProductPick', productCode: string, orderNo: string }
  | { type: 'completeOrder', orderNo: string }
@@ -36,6 +39,8 @@ export type PickingListsAction =
  
 export const pickingListsReducer = (state: PickingList[], action: PickingListsAction ) => {
   switch (action.type) {
+    case 'setPickingLists':
+      return action.pickingLists;
     case 'startPicking':
       return state.map(pL => {
         if (pL.orderNo === action.orderNo) {

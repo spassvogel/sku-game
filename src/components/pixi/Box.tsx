@@ -94,6 +94,7 @@ const Box = (props: Props & React.ComponentProps<typeof Container>) => {
       touchstart={onDragStart}
       mouseup={onDragEnd}
       mouseupoutside={onDragEnd}
+      touchend={onDragEnd}
       mousemove={onDragMove}
       touchmove={onDragMove}
     >
